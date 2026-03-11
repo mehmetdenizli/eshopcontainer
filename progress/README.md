@@ -8,6 +8,7 @@ Welcome to the documentation repository for the **eshopcontainer** project devel
 - [03-workflow.md](./03-workflow.md): Feature branching and merge workflow.
 - [04-running-locally.md](./04-running-locally.md): Documentation on running the app locally, configuring SSL certificates, and fixing UI/routing issues.
 - [05-architecture.md](./05-architecture.md): A comprehensive guide explaining the eShop microservices architecture, its components, and why technologies like PostgreSQL, Redis, and RabbitMQ are used.
+- [06-dockerization-strategy.md](./06-dockerization-strategy.md): Documentation on our hybrid approach using both Modern .NET Aspire and Traditional Docker orchestration.
 - [roadmap.md](./roadmap.md): Future planning and DevOps goals.
 
 ## How to use this folder
