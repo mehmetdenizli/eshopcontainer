@@ -5,6 +5,7 @@ Welcome to the documentation repository for the **eshopcontainer** project devel
 ## Structure
 - [01-setup.md](./01-setup.md): Detailed steps of the initial environment and repository setup.
 - [02-branching.md](./02-branching.md): Environment-based branching strategy implementation.
+- [03-workflow.md](./03-workflow.md): Feature branching and merge workflow.
 - [roadmap.md](./roadmap.md): Future planning and DevOps goals.
 
 ## How to use this folder
