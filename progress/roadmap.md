@@ -3,6 +3,7 @@
 This roadmap outlines the planned DevOps improvements and experiments for the `eshopcontainer` project.
 
 ## Phase 1: Maintenance & Observability
+- [x] Establish environment branching strategy (`dev`, `qa`, `uat`, `prod`).
 - [ ] Implement advanced logging and tracing using .NET Aspire dashboards.
 - [ ] Set up GitHub Actions for automated build and test validation.
 - [ ] Analyze container security scan results.
