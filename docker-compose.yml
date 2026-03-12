@@ -85,7 +85,7 @@ services:
       dockerfile: src/WebApp/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - IdentityUrl=http://localhost:5243
+      - IdentityUrl=http://identity-api:8080
       - CallBackUrl=http://localhost:5100
       - services__catalog-api__http__0=http://catalog-api:8080
       - services__basket-api__http__0=http://basket-api:8080
