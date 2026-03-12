@@ -47,6 +47,14 @@ Docker compose komutu bittiğinde ve konteynerler sağlıklı "running" durumuna
 docker-compose down
 ```
 
+### 2. Docker İç Ağ İletişimi (Localhost vs Service Name)
+Konteynerlar birbirleriyle konuşurken `localhost` adresini kullanamazlar. Çünkü her konteyner için `localhost` sadece kendisini ifade eder.
+
+**Hata:** WebApp, Identity API'ye `http://localhost:5243` üzerinden bağlanmaya çalışıyordu ve "Connection Refused" hatası alıyordu.
+**Çözüm:** `docker-compose.yml` içinde `IdentityUrl` değişkenini Docker'ın iç ağ ismini kullanacak şekilde `http://identity-api:8080` olarak güncelledik. 
+
+*Not: Konteynırın içindeki uygulama varsayılan olarak 8080 portunu dinlediği için iç iletişimde bu portu kullanıyoruz.*
+
 ## Hybrid Stratejinin Sonucu
 Artık proje, developer konforu için `dotnet run` (Aspire) ile, production/CI-CD senaryoları simülasyonu için ise `docker-compose up` ile güvenle kullanılabilen çok yönlü bir mimariye sahiptir.
 
