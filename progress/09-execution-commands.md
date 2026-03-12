@@ -48,3 +48,18 @@ docker ps -q | xargs -r docker stop && docker ps -a -q | xargs -r docker rm -f
 | :--- | :--- | :--- |
 | **Docker Compose** | `docker-compose up --build -d` | `docker-compose down` |
 | **.NET Aspire** | `dotnet run --project ...` | `Ctrl+C` + (Opsiyonel) `docker rm -f ...` |
+
+---
+
+## 3. Erişim Linkleri
+
+Uygulama ayağa kalktıktan sonra aşağıdaki adreslerden erişim sağlayabilirsiniz:
+
+### Docker Compose Ortamı
+- **WebApp (Ana Site):** [http://localhost:5100](http://localhost:5100)
+- **Identity API (Auth):** [http://localhost:5243](http://localhost:5243)
+- **Catalog API:** [http://localhost:5222](http://localhost:5222)
+
+### .NET Aspire Ortamı
+- **Aspire Dashboard:** [https://localhost:19888](https://localhost:19888)
+- **Servisler:** Tüm mikroservis linklerine ve loglarına **Dashboard** üzerinden dinamik portlarla erişebilirsiniz.
