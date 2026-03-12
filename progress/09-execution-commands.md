@@ -38,7 +38,7 @@ Aspire, veritabanı verilerini korumak için bazı konteynerları (`postgres`, `
 docker ps -q | xargs -r docker stop && docker ps -a -q | xargs -r docker rm -f
 ```
 
-*(Bu komut o an çalışan TÜM Docker konteynerlarını durdurur ve siler. Sadece eShop ile ilgili olanları silmek isterseniz Docker Desktop arayüzünü de kullanabilirsiniz.)*
+### Önemli Not
 
 ---
 

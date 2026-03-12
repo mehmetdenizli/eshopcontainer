@@ -22,7 +22,8 @@ var launchProfileName = ShouldUseHttpForEndpoints() ? "http" : "https";
 // Services
 var identityApi = builder.AddProject<Projects.Identity_API>("identity-api", launchProfileName)
     .WithExternalHttpEndpoints()
-    .WithReference(identityDb);
+    .WithReference(identityDb)
+    .WaitFor(identityDb);
 
 var identityEndpoint = identityApi.GetEndpoint(launchProfileName);
 
@@ -34,7 +35,8 @@ redis.WithParentRelationship(basketApi);
 
 var catalogApi = builder.AddProject<Projects.Catalog_API>("catalog-api")
     .WithReference(rabbitMq).WaitFor(rabbitMq)
-    .WithReference(catalogDb);
+    .WithReference(catalogDb)
+    .WaitFor(catalogDb);
 
 var orderingApi = builder.AddProject<Projects.Ordering_API>("ordering-api")
     .WithReference(rabbitMq).WaitFor(rabbitMq)
@@ -53,6 +55,7 @@ builder.AddProject<Projects.PaymentProcessor>("payment-processor")
 var webHooksApi = builder.AddProject<Projects.Webhooks_API>("webhooks-api")
     .WithReference(rabbitMq).WaitFor(rabbitMq)
     .WithReference(webhooksDb)
+    .WaitFor(webhooksDb)
     .WithEnvironment("Identity__Url", identityEndpoint);
 
 // Reverse proxies
@@ -63,6 +66,7 @@ builder.AddYarp("mobile-bff")
 // Apps
 var webhooksClient = builder.AddProject<Projects.WebhookClient>("webhooksclient", launchProfileName)
     .WithReference(webHooksApi)
+    .WaitFor(webHooksApi)
     .WithEnvironment("IdentityUrl", identityEndpoint);
 
 var webApp = builder.AddProject<Projects.WebApp>("webapp", launchProfileName)
@@ -72,6 +76,9 @@ var webApp = builder.AddProject<Projects.WebApp>("webapp", launchProfileName)
     .WithReference(catalogApi)
     .WithReference(orderingApi)
     .WithReference(rabbitMq).WaitFor(rabbitMq)
+    .WaitFor(identityApi)
+    .WaitFor(catalogApi)
+    .WaitFor(orderingApi)
     .WithEnvironment("IdentityUrl", identityEndpoint);
 
 // set to true if you want to use OpenAI
