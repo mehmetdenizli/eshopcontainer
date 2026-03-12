@@ -41,13 +41,16 @@ internal static class MigrateDbContextExtensions
         {
             logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
 
+            // Give it some initial breath room if it's the first run
+            await Task.Delay(2000);
+
             var strategy = context.Database.CreateExecutionStrategy();
 
             await strategy.ExecuteAsync(() => InvokeSeeder(seeder, context, scopeServices));
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
+            logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName} after multiple retries.", typeof(TContext).Name);
 
             activity?.SetExceptionTags(ex);
 
