@@ -49,3 +49,17 @@ docker-compose down
 
 ## Hybrid Stratejinin Sonucu
 Artık proje, developer konforu için `dotnet run` (Aspire) ile, production/CI-CD senaryoları simülasyonu için ise `docker-compose up` ile güvenle kullanılabilen çok yönlü bir mimariye sahiptir.
+
+## Bilinen Sorunlar ve Çözümleri (Troubleshooting)
+
+### ARM64 (Apple Silicon) Üzerinde Grpc.Tools Segmentation Fault (Hata Kodu: 139)
+.NET 10 (Debian/Linux) altyapısında Docker imajları derlenirken, `Grpc.Tools` kütüphanesinin içerisindeki varsayılan `protoc` (Protocol Buffers Compiler) aracı, Linux ARM64 mimarisinde bellek hatası (Segmentation Fault) vermektedir.
+
+Bu sorunu kalıcı olarak çözmek için tüm `Dockerfile` dosyalarında Microsoft'un paketinden gelen `protoc` yerine, işletim sisteminin kendi (native) Derleyicisi kurulmuş ve sisteme entegre edilmiştir:
+```dockerfile
+# Sistem derleyicisinin kurulması
+RUN apt-get update && apt-get install -y protobuf-compiler
+
+# MSBuild (dotnet publish) sırasında sisteme yönlendirilmesi
+RUN dotnet publish -c Release -o /app/publish -p:Protobuf_ProtocFullPath=/usr/bin/protoc
+```
