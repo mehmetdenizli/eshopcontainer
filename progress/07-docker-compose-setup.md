@@ -52,14 +52,46 @@ Artık proje, developer konforu için `dotnet run` (Aspire) ile, production/CI-C
 
 ## Bilinen Sorunlar ve Çözümleri (Troubleshooting)
 
-### ARM64 (Apple Silicon) Üzerinde Grpc.Tools Segmentation Fault (Hata Kodu: 139)
-.NET 10 (Debian/Linux) altyapısında Docker imajları derlenirken, `Grpc.Tools` kütüphanesinin içerisindeki varsayılan `protoc` (Protocol Buffers Compiler) aracı, Linux ARM64 mimarisinde bellek hatası (Segmentation Fault) vermektedir.
+### Grpc.Tools Segmentation Fault (Hata Kodu: 139) ve Mimari Farklılıkları
 
-Bu sorunu kalıcı olarak çözmek için tüm `Dockerfile` dosyalarında Microsoft'un paketinden gelen `protoc` yerine, işletim sisteminin kendi (native) Derleyicisi kurulmuş ve sisteme entegre edilmiştir:
+.NET 10 (Debian tabanlı) Linux Docker imajları derlenirken, eShop içerisindeki mikroservislerin birbirleriyle iletişim kurmasını sağlayan gRPC altyapısına ait `Grpc.Tools` isimli kütüphanenin derleyicisi (`protoc` - Protocol Buffers Compiler), projemizi ayağa kaldırmaya çalışırken bir bellek hatası (Segmentation Fault - Exit Code 139) verdi.
+
+#### 1. Neden Bu Hatayla Karşılaştık?
+Bu hatanın temel sebebi **işlemci mimarisindeki (CPU Architecture) farklılıklar**dır:
+- Geliştirme yaptığınız bilgisayar bir **Mac (Apple Silicon)**, yani **ARM64** işlemci mimarisine sahip.
+- Docker üzerinde çalıştırdığımız imajlar (`mcr.microsoft.com/dotnet/sdk:10.0`), varsayılan olarak Linux üzerinde çalışacak şekilde iniyor.
+- `Grpc.Tools` NuGet paketinin içinden çıkan, Microsoft'un önceden derleyip pakete koyduğu `protoc` (Linux sürümü) dosyası, henüz .NET 10 preview container'larında ARM64 çekirdeğine tam uyum sağlayamamış bir bellek bug'ına sahip. Bu dosya çalışmaya başladığı anda çökmektedir.
+
+#### 2. Sorunu Nasıl Çözdük? (ARM64 / Mac Apple Silicon Konfigürasyonu)
+Sorunu çözmek (bypass etmek) için harika bir yöntem uyguladık: Microsoft'un NuGet paketinin içinden gelen o bozuk "hazır" derleyiciyi kullanmayı reddettik. Bunun yerine, konteynerın işletim sistemi olan Debian Linux'un kendi yasal depolarındaki (apt-get) orijinal ve saf `protobuf-compiler` programını kurduk ve MSBuild sistemine (.NET derleyicisine) *"Sen paket içindekini boşver, işlemleri benim yeni kurduğum sistem aracına yaptır"* dedik.
+
+Dockerfile kodlarımızda ARM64 (Mac) için uyguladığımız değişiklik şöyledir:
+
 ```dockerfile
-# Sistem derleyicisinin kurulması
+# 1. İşletim sisteminin orijinal, CPU ile %100 uyumlu derleyicisini indir ve kur (apt-get)
 RUN apt-get update && apt-get install -y protobuf-compiler
 
-# MSBuild (dotnet publish) sırasında sisteme yönlendirilmesi
+# 2. .NET Publish komutuna, Grpc paketinin içindekini değil (/usr/bin/protoc) yolundaki yeni programı kullanmasını zorunlu kıl
 RUN dotnet publish -c Release -o /app/publish -p:Protobuf_ProtocFullPath=/usr/bin/protoc
 ```
+
+#### 3. AMD64 (Intel/AMD) Bir Bilgisayarda Olsaydık Ne Olacaktı?
+Eğer bu projeyi bir **Intel/AMD** işlemcili Windows ya da Mac bilgisayarda çalıştırsaydık (Yani **x86_64 / amd64** mimarisi), yukarıdaki hatanın **hiçbiriyle karşılaşmayacaktık**. Çünkü `Grpc.Tools` paketinin içerisindeki varsayılan Linux/amd64 aracı yıllardır stabil ve sorunsuz çalışmaktadır.
+
+Bu durumda, o 5 projemizin `Dockerfile` kodları son derece sade kalacaktı ve o ekstra iki satır Linux komutuna hiç ihtiyacımız olmayacaktı. AMD64 için Dockerfile yapısı (Orijinal Hali) şöyle olurdu:
+
+```dockerfile
+# Intel AMD64 Standart Konfigürasyonu (Sorunsuz)
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /src
+COPY . .
+WORKDIR /src/src/Identity.API
+RUN dotnet publish -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "Identity.API.dll"]
+```
+
+*Not: Şirketinizdeki CI/CD (GitHub Actions) sunucuları %99 oranında standart Linux Ubuntu (AMD64) makinelerdir. Dolayısıyla CI/CD sürecini yazarken bu `apt-get` trick'ine ihtiyacımız olmayabilir, ancak yazdığımız bu çözüm geriye dönük (AMD64) ile de tamamen uyumlu olduğu için hiçbir sunucuyu bozmayacaktır. Hem Apple bilgisayarı olan geliştiricileri kurtarmış olduk, hem de CI platformlarında sorunsuzca çalışmasını garanti altına aldık.*
