@@ -11,6 +11,7 @@ Welcome to the documentation repository for the **eshopcontainer** project devel
 - [06-dockerization-strategy.md](./06-dockerization-strategy.md): Documentation on our hybrid approach using both Modern .NET Aspire and Traditional Docker orchestration.
 - [07-docker-compose-setup.md](./07-docker-compose-setup.md): Step-by-step instructions on running the newly created traditional Docker setup without .NET Aspire.
 - [08-docker-compose-login-fix.md](./08-docker-compose-login-fix.md): Deep dive into the OIDC login fix for Docker Compose environment.
+- [09-execution-commands.md](./09-execution-commands.md): Commands for starting, stopping, and cleaning up the app (Aspire & Compose).
 - [roadmap.md](./roadmap.md): Future planning and DevOps goals.
 
 ## How to use this folder
