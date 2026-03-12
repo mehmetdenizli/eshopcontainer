@@ -102,4 +102,8 @@ COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Identity.API.dll"]
 ```
 
+### 3. OIDC Login Sorunu ve Çözümü
+
+Docker Compose ortamında karşılaşılan OIDC login redirect sorunları ve `IdentityUrlExternal` çözümü hakkında detaylı bilgi için [08-docker-compose-login-fix.md](08-docker-compose-login-fix.md) dokümanını okuyun.
+
 *Not: Şirketinizdeki CI/CD (GitHub Actions) sunucuları %99 oranında standart Linux Ubuntu (AMD64) makinelerdir. Dolayısıyla CI/CD sürecini yazarken bu `apt-get` trick'ine ihtiyacımız olmayabilir, ancak yazdığımız bu çözüm geriye dönük (AMD64) ile de tamamen uyumlu olduğu için hiçbir sunucuyu bozmayacaktır. Hem Apple bilgisayarı olan geliştiricileri kurtarmış olduk, hem de CI platformlarında sorunsuzca çalışmasını garanti altına aldık.*

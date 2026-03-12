@@ -28,6 +28,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__identitydb=Host=postgres;Database=identitydb;Username=postgres;Password=postgres
       - WebAppClient=http://localhost:5100
+      - IssuerUri=http://localhost:5243
     ports:
       - "5243:8080"
     depends_on:
@@ -86,6 +87,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - IdentityUrl=http://identity-api:8080
+      - IdentityUrlExternal=http://localhost:5243
       - CallBackUrl=http://localhost:5100
       - services__catalog-api__http__0=http://catalog-api:8080
       - services__basket-api__http__0=http://basket-api:8080

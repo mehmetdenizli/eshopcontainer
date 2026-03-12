@@ -58,6 +58,7 @@ public static class Extensions
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
         var identityUrl = configuration.GetRequiredValue("IdentityUrl");
+        var identityUrlExternal = configuration.GetValue("IdentityUrlExternal", identityUrl);
         var callBackUrl = configuration.GetRequiredValue("CallBackUrl");
         var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 60);
 
@@ -72,7 +73,7 @@ public static class Extensions
         .AddOpenIdConnect(options =>
         {
             options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.Authority = identityUrl;
+            options.Authority = identityUrl;   // server-side: Docker internal URL for discovery & token exchange
             options.SignedOutRedirectUri = callBackUrl;
             options.ClientId = "webapp";
             options.ClientSecret = "secret";
@@ -84,6 +85,16 @@ public static class Extensions
             options.Scope.Add("profile");
             options.Scope.Add("orders");
             options.Scope.Add("basket");
+            // Rewrite the authorization endpoint URL for browser redirect (internal → external)
+            options.Events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = context =>
+                {
+                    context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress
+                        .Replace(identityUrl, identityUrlExternal, StringComparison.OrdinalIgnoreCase);
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         // Blazor auth services
