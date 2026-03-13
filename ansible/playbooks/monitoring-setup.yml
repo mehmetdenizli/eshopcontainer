@@ -1,0 +1,61 @@
+---
+- name: Monitoring (Faz 4) Altyapısı Kurulumu
+  hosts: monitoring
+  become: true
+  vars:
+    mon_dir: "/home/ubuntu/monitoring"
+
+  tasks:
+    - name: İzleme Klasörlerini Oluştur
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: 1000
+        group: 1000
+        mode: "0755"
+      loop:
+        - "{{ mon_dir }}"
+        - "{{ mon_dir }}/prometheus_data"
+        - "{{ mon_dir }}/loki_data"
+        - "{{ mon_dir }}/grafana_data"
+
+    - name: Prometheus Konfigürasyonu Hazırla
+      template:
+        src: "../templates/monitoring/prometheus.yml.j2"
+        dest: "{{ mon_dir }}/prometheus.yml"
+        owner: 1000
+        group: 1000
+
+    - name: Loki Konfigürasyonu Hazırla
+      template:
+        src: "../templates/monitoring/loki-config.yml.j2"
+        dest: "{{ mon_dir }}/loki-config.yml"
+        owner: 1000
+        group: 1000
+
+    - name: Alloy River Konfigürasyonu Hazırla
+      template:
+        src: "../templates/monitoring/alloy-config.river.j2"
+        dest: "{{ mon_dir }}/alloy-config.river"
+        owner: 1000
+        group: 1000
+
+    - name: Docker Compose Dosyasını Hazırla
+      template:
+        src: "../templates/monitoring/docker-compose.yml.j2"
+        dest: "{{ mon_dir }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: PLGA Stack Başlat
+      community.docker.docker_compose_v2:
+        project_src: "{{ mon_dir }}"
+        state: present
+
+    - name: Servis Durumlarını Bildir
+      debug:
+        msg:
+          - "Grafana Hazır: http://{{ ansible_host }}:3003"
+          - "Prometheus Hazır: http://{{ ansible_host }}:9090"
+          - "Loki Hazır: http://{{ ansible_host }}:3100"
+          - "Alloy API: http://{{ ansible_host }}:12345"

@@ -1,0 +1,84 @@
+---
+- name: Jenkins (CI/CD) Fabrikası Kurulumu
+  hosts: jenkins
+  become: true
+  vars:
+    jenkins_dir: "/home/ubuntu/jenkins"
+
+  tasks:
+    - name: Jenkins Klasörünü Oluştur
+      file:
+        path: "{{ jenkins_dir }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Jenkins Home Klasörünü Oluştur
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: 1000
+        group: 1000
+        mode: "0755"
+      loop:
+        - "{{ jenkins_dir }}/jenkins_home"
+        - "{{ jenkins_dir }}/jenkins_home/init.groovy.d"
+
+    - name: Host Docker Grup ID'sini Al
+      shell: "getent group docker | cut -d: -f3"
+      register: docker_gid
+      changed_when: false
+
+    - name: Dockerfile Hazırla
+      template:
+        src: "../templates/jenkins/Dockerfile.j2"
+        dest: "{{ jenkins_dir }}/Dockerfile"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Docker Compose Dosyasını Hazırla
+      template:
+        src: "../templates/jenkins/docker-compose.yml.j2"
+        dest: "{{ jenkins_dir }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Jenkins Init Script Hazırla
+      template:
+        src: "../templates/jenkins/init.groovy.j2"
+        dest: "{{ jenkins_dir }}/jenkins_home/init.groovy.d/init.groovy"
+        owner: 1000
+        group: 1000
+
+    - name: Jenkins Konteynerını Build Et ve Başlat
+      community.docker.docker_compose_v2:
+        project_src: "{{ jenkins_dir }}"
+        state: present
+        build: always
+      register: build_result
+
+    - name: Jenkins'in Hazır Olmasını Bekle
+      pause:
+        seconds: 40
+
+    - name: Bilgilendirme
+      debug:
+        msg:
+          - "Jenkins Başarıyla Kuruldu!"
+          - "URL: http://{{ ansible_host }}:8080"
+          - "Kullanıcı: admin"
+          - "Şifre: P@ssword123!"
+          - "Önemli: Lütfen ilk girişten sonra şifreyi değiştirin."
+
+    - name: "Gece Yarısı Docker Temizliği (Cron Job)"
+      cron:
+        name: "Docker Image Prune"
+        minute: "0"
+        hour: "3"
+        job: "docker image prune -af --filter 'until=24h'"
+        state: present
+
+    - name: Kurulum Bilgisini Yazdır
+      debug:
+        msg: "Jenkins Hazır: http://{{ ansible_host }}:8080"

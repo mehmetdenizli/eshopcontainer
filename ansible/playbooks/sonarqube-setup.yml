@@ -1,0 +1,71 @@
+---
+- name: SonarQube ve Güvenlik Araçları Kurulumu
+  hosts: security
+  become: true
+  vars:
+    sonar_dir: "/home/ubuntu/sonarqube"
+
+  tasks:
+    - name: İşletim Sistemi Optimizasyonu (Elasticsearch için)
+      sysctl:
+        name: vm.max_map_count
+        value: "262144"
+        state: present
+        reload: yes
+
+    - name: Limitleri Artır (File Descriptors)
+      pam_limits:
+        domain: "*"
+        limit_type: "-"
+        limit_item: nofile
+        value: 65536
+
+    - name: SonarQube Klasörlerini Oluştur
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: 1000
+        group: 1000
+        mode: "0755"
+      loop:
+        - "{{ sonar_dir }}"
+        - "{{ sonar_dir }}/sonarqube_data"
+        - "{{ sonar_dir }}/sonarqube_extensions"
+        - "{{ sonar_dir }}/sonarqube_logs"
+        - "{{ sonar_dir }}/postgresql_data"
+
+    - name: Docker Compose Dosyasını Hazırla
+      template:
+        src: "../templates/sonarqube/docker-compose.yml.j2"
+        dest: "{{ sonar_dir }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: SonarQube Başlat
+      community.docker.docker_compose_v2:
+        project_src: "{{ sonar_dir }}"
+        state: present
+
+    - name: Servis Durumunu Bildir
+      debug:
+        msg: "SonarQube Hazır: http://{{ ansible_host }}:9000"
+
+- name: Jenkins Sunucusuna Trivy Kurulumu
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: Trivy Repository Anahtarını Ekle
+      apt_key:
+        url: https://aquasecurity.github.io/trivy-repo/deb/public.key
+        state: present
+
+    - name: Trivy Repository Ekle
+      apt_repository:
+        repo: "deb https://aquasecurity.github.io/trivy-repo/deb {{ ansible_distribution_release }} main"
+        state: present
+
+    - name: Trivy Kur
+      apt:
+        name: trivy
+        state: present
+        update_cache: yes

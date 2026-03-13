@@ -1,0 +1,50 @@
+// Alloy configuration for eShop Local Lab Monitoring
+
+logging {
+  level = "info"
+}
+
+// 1. Host (Node) Metrics Collection
+prometheus.exporter.unix "host" {
+  procfs_path = "/proc"
+  sysfs_path = "/sys"
+  rootfs_path = "/"
+}
+
+prometheus.scrape "host_scrape" {
+  targets = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.remote_write.local_prom.receiver]
+}
+
+// 2. Docker Container Logistics
+loki.relabel "docker_logs" {
+  forward_to = [loki.write.local_loki.receiver]
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    target_label  = "container"
+  }
+  
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "service"
+  }
+}
+
+loki.source.docker "local_containers" {
+  host       = "unix:///var/run/docker.sock"
+  forward_to = [loki.relabel.docker_logs.receiver]
+}
+
+// 3. Central Storage Destinations
+prometheus.remote_write "local_prom" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+loki.write "local_loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

@@ -1,25 +1,30 @@
-# DevOps Roadmap: eshopcontainer
+# Proje Yol Haritası (ROADMAP)
 
-This roadmap outlines the planned DevOps improvements and experiments for the `eshopcontainer` project.
+Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 
-## Phase 1: Maintenance & Observability
-- [x] Establish environment branching strategy (`dev`, `qa`, `uat`, `prod`).
-- [ ] Implement advanced logging and tracing using .NET Aspire dashboards.
-- [ ] Set up GitHub Actions for automated build and test validation.
-- [ ] Analyze container security scan results.
+## Faz 1: Altyapı Hazırlığı (Güncel)
+- [x] Mevcut yapılandırmaların analizi.
+- [x] Geçersiz dosyaların temizlenmesi.
+- [x] Kaynak planlamasının yapılması.
+- [x] `handson/` dizin yapısının oluşturulması.
+- [x] Terraform modüler yapısının kurulması.
+- [x] Multipass üzerinde ilk VM'in (k3s-master) provision edilmesi.
 
-## Phase 2: Infrastructure as Code (IaC)
-- [ ] Refine Azure Bicep / Terraform templates for cloud deployment.
-- [ ] Implement GitOps workflows with ArgoCD or Flux.
-- [ ] Configure environment-specific variable management.
+## Faz 2: Kubernetes ve Networking
+- [x] K3s Cluster otomasyon yapısının (Ansible) kurulması.
+- [x] K3s Cluster kurulumu (Master & Worker).
+- [x] Kubernetes Gateway API yapılandırması (MetalLB L2).
+- [ ] `/etc/hosts` senkronizasyonu ve dokunulmazlık (`chattr +i`) ayarları.
 
-## Phase 3: Scaling & Performance
-- [ ] Implement Horizontal Pod Autoscaling (HPA) in Kubernetes.
-- [ ] Optimize container images (multi-stage builds, distroless).
-- [ ] Conduct load testing and performance benchmarking.
+## Faz 3: DevOps Araç Seti
+- [x] Tüm sunuculara Docker & Docker Compose kurulumu.
+- [x] Gitea (Git Server) ve Yerel Docker Registry kurulumu.
+- [x] Jenkins CI/CD pipeline tasarımları.
+- [x] SonarQube ve Trivy güvenlik entegrasyonları.
+- [x] Hashicorp Vault ile secret yönetimi.
 
-## Maintenance Policy
-All changes will be:
-1. Documented in this `progress` folder.
-2. Verified via automated or manual testing.
-3. Pushed to `origin/main` using Antigravity.
+## Faz 4: İzleme ve Validasyon
+- [x] Prometheus & Grafana ile metrik takibi.
+- [x] Loki ile merkezi loglama.
+- [ ] eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
+- [ ] Uçtan uca testlerin yapılması.

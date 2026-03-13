@@ -1,0 +1,9 @@
+# --- eShopOnContainers DevOps Altyapısı (Dinamik) ---
+192.168.2.85  k3s-master
+192.168.2.86  k8s-worker
+192.168.2.89  jenkins.local
+192.168.2.87  monitoring-srv
+192.168.2.91  security.local
+192.168.2.90  git.local
+192.168.2.92  vault.local
+# --------------------------------------------------

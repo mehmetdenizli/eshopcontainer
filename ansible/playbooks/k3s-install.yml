@@ -1,0 +1,50 @@
+---
+- name: K3s Cluster Kurulumu
+  hosts: k3s_cluster
+  become: true
+  tasks:
+    - name: Master Node Kurulumu
+      when: "'k3s_master' in group_names"
+      block:
+        - name: K3s Master Servisini Kur
+          shell: curl -sfL https://get.k3s.io | sh -
+          args:
+            creates: /usr/local/bin/k3s
+
+        - name: K3s Token'ı Oku
+          slurp:
+            src: /var/lib/rancher/k3s/server/node-token
+          register: node_token
+
+        - name: Token'ı Değişkene Ata
+          set_fact:
+            k3s_token: "{{ node_token.content | b64decode | trim }}"
+
+    - name: Worker Node Kurulumu
+      when: "'k3s_worker' in group_names"
+      block:
+        - name: Master IP'sini Al
+          set_fact:
+            master_ip: "{{ hostvars['k3s-master']['ansible_host'] }}"
+
+        - name: K3s Worker Servisini Kur ve Master'a Bağla
+          shell: "curl -sfL https://get.k3s.io | K3S_URL=https://{{ master_ip }}:6443 K3S_TOKEN={{ hostvars['k3s-master']['k3s_token'] }} sh -"
+          args:
+            creates: /usr/local/bin/k3s
+
+    - name: "Post-Install: Kubeconfig Senkronizasyonu"
+      when: "'k3s_master' in group_names"
+      block:
+        - name: Kubeconfig Dosyasını Mac'e Çek
+          fetch:
+            src: /etc/rancher/k3s/k3s.yaml
+            dest: "../kubeconfig"
+            flat: yes
+
+        - name: Lokal Kubeconfig'de IP Adresini Güncelle
+          delegate_to: localhost
+          become: false
+          replace:
+            path: "../kubeconfig"
+            regexp: "127.0.0.1"
+            replace: "{{ ansible_host }}"
