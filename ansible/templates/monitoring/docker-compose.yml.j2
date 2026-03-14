@@ -12,6 +12,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-remote-write-receiver'
     ports:
       - "9090:9090"
     networks:
@@ -38,6 +39,9 @@ services:
       - "3003:3000"
     volumes:
       - ./grafana_data:/var/lib/grafana
+      - ./dashboard-provider.yml:/etc/grafana/provisioning/dashboards/provider.yml
+      - ./datasource-provider.yml:/etc/grafana/provisioning/datasources/provider.yml
+      - ./unified-dashboard.json:/etc/grafana/provisioning/dashboards/unified-dashboard.json
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -55,7 +59,10 @@ services:
       - ./alloy-config.river:/etc/alloy/config.river
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /var/log:/var/log:ro
-    command: run --host=0.0.0.0 /etc/alloy/config.river
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+    command: run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.river
     networks:
       - plga-net
 

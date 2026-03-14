@@ -20,11 +20,11 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 | :--- | :--- | :--- | :--- | :--- |
 | k3s-master | 192.168.2.85 | k3s-master | 1 | 2GB |
 | k8s-worker | 192.168.2.86 | k8s-worker | 2 | 4GB |
-| monitoring-srv| 192.168.2.87 | monitoring-srv | 1 | 2GB |
+| monitoring-srv | 192.168.2.87 | monitoring-srv | 1 | 2GB |
 | jenkins.local | 192.168.2.89 | jenkins-srv | 1 | 3GB |
-| git.local | 192.168.2.90 | git-srv | 1 | 1.5GB|
-| security.local| 192.168.2.91 | security-srv | 1 | 3GB |
-| vault.local | 192.168.2.92 | vault-srv | 1 | 512MB|
+| git.local | 192.168.2.90 | git-srv | 1 | 1.5GB |
+| security.local | 192.168.2.91 | security-srv | 1 | 3GB |
+| vault.local | 192.168.2.92 | vault-srv | 1 | 512MB |
 
 ## ✅ Tamamlanan Adımlar
 1. **Analiz & Planlama:** 24GB RAM limitine göre 16GB VM paylaştırıldı.
@@ -38,11 +38,12 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 9. **Gitea & Registry:** Git ve Paket sunucusu (Gitea) git-srv üzerinde aktif edildi.
 10. **Jenkins Fabrikası:** jenkins-srv üzerinde tüm pluginlerle (Sonar-K8s-Docker) birlikte kuruldu.
 11. **Güvenlik & Kalite:** security-srv üzerinde SonarQube (LTS) kuruldu, Jenkins'e Trivy entegre edildi.
-12. **Secret Management:** vault-srv üzerinde Hashicorp Vault aktif edildi.
-13. **Monitoring (PLGA):** monitoring-srv üzerinde Prometheus, Loki, Grafana ve Alloy (Central) kuruldu.
+12. **Secret Management:** vault-srv (10GB Disk) üzerinde Hashicorp Vault aktif edildi.
+13. **Monitoring (PLGA):** Tüm 7 sunucuya Alloy ajanları dağıtıldı. Grafana veri kaynakları ve Unified Dashboard otomatik (provisioning) olarak kuruldu.
+14. **Domain Persistence:** Tüm sunucularda `/etc/hosts` dosyası `cloud-init` kilidi kaldırılarak kalıcı hale getirildi.
 
 ## 🚀 Sıradaki Adım (Next Phase)
-- **Edge Alloy Deployment:** Tüm sunuculara (node-exporter) ve K8s cluster'ına Alloy ajanlarının dağıtılması.
+- **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
 
 ## 🔗 Aktif Servis Linkleri (Quick Access)
 

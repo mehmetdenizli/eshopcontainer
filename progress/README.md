@@ -39,4 +39,7 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 12. [20-jenkins-fabrikasi-kurulumu.md](./20-jenkins-fabrikasi-kurulumu.md) - Jenkins CI/CD Fabrikası Kurulumu
 13. [21-sonarqube-ve-guvenlik-entegrasyonu.md](./21-sonarqube-ve-guvenlik-entegrasyonu.md) - SonarQube ve Güvenlik (Trivy) Entegrasyonu
 14. [22-vault-secret-management.md](./22-vault-secret-management.md) - Hashicorp Vault (Secret Management) Kurulumu
-15. [23-monitoring-stratejisi-ve-plga.md](./23-monitoring-stratejisi-ve-plga.md) - Monitoring Stratejisi (PLGA Stack) ve Gözlem Kulesi
+15. [23-monitoring-stratejisi.md](./23-monitoring-stratejisi.md) - Monitoring Stratejisi (PLGA Stack) ve Gözlem Kulesi
+16. [24-detayli-izleme-aktif.md](./24-detayli-izleme-aktif.md) - Detaylı İzleme ve Alloy Dağıtımı Tamamlandı
+17. [25-domain-tabanli-iletisim-ve-kalicilik.md](./25-domain-tabanli-iletisim-ve-kalicilik.md) - Domain Tabanlı İletişim ve /etc/hosts Kalıcılığı
+18. [26-grafana-otomasyonu-ve-dashboard.md](./26-grafana-otomasyonu-ve-dashboard.md) - Grafana Otomasyonu (Provisioning) ve Dashboard Yayını

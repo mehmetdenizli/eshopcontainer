@@ -16,6 +16,13 @@ common:
     kvstore:
       store: inmemory
 
+limits_config:
+  reject_old_samples: false
+  max_cache_freshness_per_query: 10m
+  split_queries_by_interval: 15m
+  ingestion_rate_mb: 10
+  ingestion_burst_size_mb: 20
+
 query_range:
   results_cache:
     cache:

@@ -32,7 +32,7 @@ module "jenkins" {
   vm_name        = "jenkins-srv"
   cpu            = 1
   ram            = "3G"
-  disk           = "15G"
+  disk           = "30G"
   ssh_public_key = file("~/.ssh/id_rsa.pub")
 }
 
@@ -68,7 +68,7 @@ module "vault" {
   vm_name        = "vault-srv"
   cpu            = 1
   ram            = "512M"
-  disk           = "5G"
+  disk           = "10G"
   ssh_public_key = file("~/.ssh/id_rsa.pub")
 }
 

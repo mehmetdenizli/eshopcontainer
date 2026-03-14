@@ -11,9 +11,18 @@ prometheus.exporter.unix "host" {
   rootfs_path = "/"
 }
 
+prometheus.relabel "host_metrics" {
+  forward_to = [prometheus.remote_write.local_prom.receiver]
+
+  rule {
+    replacement  = "{{ inventory_hostname }}"
+    target_label = "host_name"
+  }
+}
+
 prometheus.scrape "host_scrape" {
   targets = prometheus.exporter.unix.host.targets
-  forward_to = [prometheus.remote_write.local_prom.receiver]
+  forward_to = [prometheus.relabel.host_metrics.receiver]
 }
 
 // 2. Docker Container Logistics
@@ -29,22 +38,32 @@ loki.relabel "docker_logs" {
     source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
     target_label  = "service"
   }
+
+  rule {
+    replacement  = "{{ inventory_hostname }}"
+    target_label = "host_name"
+  }
+}
+
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
 }
 
 loki.source.docker "local_containers" {
   host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.containers.targets
   forward_to = [loki.relabel.docker_logs.receiver]
 }
 
 // 3. Central Storage Destinations
 prometheus.remote_write "local_prom" {
   endpoint {
-    url = "http://prometheus:9090/api/v1/write"
+    url = "http://monitoring-srv:9090/api/v1/write"
   }
 }
 
 loki.write "local_loki" {
   endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
+    url = "http://monitoring-srv:3100/loki/api/v1/push"
   }
 }

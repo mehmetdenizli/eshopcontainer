@@ -1,0 +1,41 @@
+---
+- name: Edge Alloy (Ajan) Dağıtımı
+  hosts: all:!monitoring
+  become: true
+  vars:
+    central_mon_ip: "192.168.2.87"
+    alloy_dir: "/home/ubuntu/alloy"
+
+  tasks:
+    - name: Alloy Klasörünü Oluştur
+      file:
+        path: "{{ alloy_dir }}"
+        state: directory
+        owner: 1000
+        group: 1000
+        mode: "0755"
+
+    - name: Alloy River Konfigürasyonu Hazırla
+      template:
+        src: "../templates/monitoring/alloy-config.river.j2"
+        dest: "{{ alloy_dir }}/config.river"
+        owner: 1000
+        group: 1000
+
+    - name: Alloy Konteynerını Başlat
+      community.docker.docker_container:
+        name: alloy-agent
+        image: grafana/alloy:v1.0.0
+        state: started
+        restart_policy: always
+        network_mode: host
+        volumes:
+          - "{{ alloy_dir }}/config.river:/etc/alloy/config.river"
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+          - "/var/log:/var/log:ro"
+          - "/proc:/host/proc:ro"
+          - "/sys:/host/sys:ro"
+          - "/:/host/root:ro"
+        command: "run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.river"
+        env:
+          HOSTNAME: "{{ inventory_hostname }}"
