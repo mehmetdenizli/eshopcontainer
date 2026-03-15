@@ -1,50 +1,31 @@
-// Alloy configuration for eShop Local Lab Monitoring
-
+// Alloy configuration - Simplified & Full Data Collection
 logging {
   level = "info"
 }
 
-// 1. Host (Node) Metrics Collection
+// 1. Host Metrics (Node Exporter)
 prometheus.exporter.unix "host" {
   procfs_path = "/proc"
-  sysfs_path = "/sys"
+  sysfs_path  = "/sys"
   rootfs_path = "/"
 }
 
-prometheus.relabel "host_metrics" {
-  forward_to = [prometheus.remote_write.local_prom.receiver]
-
-  rule {
-    replacement  = "{{ inventory_hostname }}"
-    target_label = "host_name"
-  }
-}
-
 prometheus.scrape "host_scrape" {
-  targets = prometheus.exporter.unix.host.targets
-  forward_to = [prometheus.relabel.host_metrics.receiver]
+  targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.remote_write.local_prom.receiver]
 }
 
-// 2. Docker Container Logistics
-loki.relabel "docker_logs" {
-  forward_to = [loki.write.local_loki.receiver]
-
-  rule {
-    source_labels = ["__meta_docker_container_name"]
-    target_label  = "container"
-  }
-  
-  rule {
-    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
-    target_label  = "service"
-  }
-
-  rule {
-    replacement  = "{{ inventory_hostname }}"
-    target_label = "host_name"
-  }
+// 2. Container Metrics (cAdvisor)
+prometheus.exporter.cadvisor "containers" {
+  docker_host = "unix:///var/run/docker.sock"
 }
 
+prometheus.scrape "container_scrape" {
+  targets    = prometheus.exporter.cadvisor.containers.targets
+  forward_to = [prometheus.remote_write.local_prom.receiver]
+}
+
+// 3. Docker Container Logs
 discovery.docker "containers" {
   host = "unix:///var/run/docker.sock"
 }
@@ -52,10 +33,20 @@ discovery.docker "containers" {
 loki.source.docker "local_containers" {
   host       = "unix:///var/run/docker.sock"
   targets    = discovery.docker.containers.targets
-  forward_to = [loki.relabel.docker_logs.receiver]
+  forward_to = [loki.write.local_loki.receiver]
 }
 
-// 3. Central Storage Destinations
+// 4. Kubernetes Pod Logs (ONLY on K3s nodes)
+{% if 'k3s_cluster' in group_names %}
+loki.source.file "pod_logs" {
+  targets = [
+    { "__path__" = "/var/log/pods/*/*/*.log", "job" = "kubernetes-pods" },
+  ]
+  forward_to = [loki.write.local_loki.receiver]
+}
+{% endif %}
+
+// 5. Remote Write Destinations (Using static /etc/hosts mapping)
 prometheus.remote_write "local_prom" {
   endpoint {
     url = "http://monitoring-srv:9090/api/v1/write"

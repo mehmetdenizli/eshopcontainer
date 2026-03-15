@@ -14,7 +14,7 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 - [x] K3s Cluster otomasyon yapısının (Ansible) kurulması.
 - [x] K3s Cluster kurulumu (Master & Worker).
 - [x] Kubernetes Gateway API yapılandırması (MetalLB L2).
-- [ ] `/etc/hosts` senkronizasyonu ve dokunulmazlık (`chattr +i`) ayarları.
+- [x] `/etc/hosts` senkronizasyonu ve dokunulmazlık (`chattr +i`) ayarları.
 
 ## Faz 3: DevOps Araç Seti
 - [x] Tüm sunuculara Docker & Docker Compose kurulumu.

@@ -39,9 +39,7 @@ services:
       - "3003:3000"
     volumes:
       - ./grafana_data:/var/lib/grafana
-      - ./dashboard-provider.yml:/etc/grafana/provisioning/dashboards/provider.yml
       - ./datasource-provider.yml:/etc/grafana/provisioning/datasources/provider.yml
-      - ./unified-dashboard.json:/etc/grafana/provisioning/dashboards/unified-dashboard.json
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin

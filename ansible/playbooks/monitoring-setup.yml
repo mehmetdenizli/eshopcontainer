@@ -46,18 +46,6 @@
         dest: "{{ mon_dir }}/datasource-provider.yml"
         mode: "0644"
 
-    - name: Dashboard Provider Hazırla
-      template:
-        src: "../templates/monitoring/dashboard-provider.yml.j2"
-        dest: "{{ mon_dir }}/dashboard-provider.yml"
-        mode: "0644"
-
-    - name: Unified Dashboard Hazırla
-      template:
-        src: "../templates/monitoring/unified-dashboard.json.j2"
-        dest: "{{ mon_dir }}/unified-dashboard.json"
-        mode: "0644"
-
     - name: Docker Compose Dosyasını Hazırla
       template:
         src: "../templates/monitoring/docker-compose.yml.j2"

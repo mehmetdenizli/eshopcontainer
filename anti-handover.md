@@ -39,8 +39,8 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 10. **Jenkins Fabrikası:** jenkins-srv üzerinde tüm pluginlerle (Sonar-K8s-Docker) birlikte kuruldu.
 11. **Güvenlik & Kalite:** security-srv üzerinde SonarQube (LTS) kuruldu, Jenkins'e Trivy entegre edildi.
 12. **Secret Management:** vault-srv (10GB Disk) üzerinde Hashicorp Vault aktif edildi.
-13. **Monitoring (PLGA):** Tüm 7 sunucuya Alloy ajanları dağıtıldı. Grafana veri kaynakları ve Unified Dashboard otomatik (provisioning) olarak kuruldu.
-14. **Domain Persistence:** Tüm sunucularda `/etc/hosts` dosyası `cloud-init` kilidi kaldırılarak kalıcı hale getirildi.
+13. **Monitoring (PLGA):** Tüm 7 sunucuya basitleştirilmiş Alloy ajanları dağıtıldı. cAdvisor (konteyner metrikleri) ve K8s pod logları (job="kubernetes-pods") toplanıyor. Grafana dashboard'ları temizlendi ("Clean Slate").
+14. **Domain Persistence:** Tüm sunucularda `/etc/hosts` dosyası senkronize edildi ve `cloud-init` kilidi kaldırılarak kalıcı hale getirildi.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.

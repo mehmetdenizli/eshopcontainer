@@ -8,16 +8,17 @@ Grafana'ya erişin:
 - **Kullanıcı:** `admin`
 - **Şifre:** `admin`
 
-### Veri Kaynaklarını (Data Sources) Tanımlayın:
-1. **Connections** -> **Data Sources** -> **Add Data Source**
-2. **Prometheus:** URL olarak `http://prometheus:9090` girin ve Save edin.
-3. **Loki:** URL olarak `http://loki:3100` girin ve Save edin.
+### Veri Kaynakları (Data Sources):
+Veri kaynakları otomatik olarak (provisioned) eklenmiştir:
+1. **Prometheus:** `http://prometheus:9090` (Metrikler için hazır)
+2. **Loki:** `http://loki:3100` (Loglar için hazır)
+Doğrulamak için **Connections** -> **Data Sources** menüsüne bakabilirsiniz.
 
 ## 🔍 2. Logları Keşfetmek (Loki)
 Giriş yaptıktan sonra sol menüden **Explore** kısmına gelin:
 - Select Data Source: **Loki**
-- Query (Code modunda): `{container="alloy"}` veya `{service="alloy"}` 
-- **Run Query** butonuna basın. Alloy'un kendi loglarını anlık olarak göreceksiniz.
+- Query (Code modunda): `{job="kubernetes-pods"}` veya `{instance="jenkins.local"}` 
+- **Run Query** butonuna basın. Gerçek zamanlı logları göreceksiniz.
 
 ## 📊 3. Metrikleri Görmek (Prometheus)
 **Explore** kısmında:

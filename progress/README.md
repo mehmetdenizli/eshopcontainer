@@ -9,13 +9,13 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 
 | Hostname | IP | Görevler | Kaynaklar |
 | :--- | :--- | :--- | :--- |
-| **k3s-master** | 192.168.2.77 | Control Plane, Gateway API | 1 CPU, 2GB RAM, 10GB Disk |
-| **k8s-worker** | 192.168.2.78 | Application Pods | 2 CPU, 4GB RAM, 25GB Disk |
-| **jenkins.local** | 192.168.2.79 | Jenkins CI/CD | 1 CPU, 3GB RAM, 15GB Disk |
-| **monitoring-srv** | 192.168.2.82 | Prometheus, Loki, Grafana, Alloy | 1 CPU, 2GB RAM, 15GB Disk |
-| **security.local** | 192.168.2.80 | SonarQube, Trivy | 1 CPU, 3GB RAM, 10GB Disk |
-| **git.local** | 192.168.2.81 | Gitea, Image Registry | 1 CPU, 1.5GB RAM, 15GB Disk |
-| **vault.local** | 192.168.2.83 | Hashicorp Vault | 1 CPU, 512MB RAM, 5GB Disk |
+| **k3s-master** | 192.168.2.85 | Control Plane, Gateway API | 1 CPU, 2GB RAM, 10GB Disk |
+| **k8s-worker** | 192.168.2.86 | Application Pods | 2 CPU, 4GB RAM, 25GB Disk |
+| **jenkins.local** | 192.168.2.89 | Jenkins CI/CD | 1 CPU, 3GB RAM, 15GB Disk |
+| **monitoring-srv** | 192.168.2.87 | Prometheus, Loki, Grafana, Alloy | 1 CPU, 2GB RAM, 15GB Disk |
+| **security.local** | 192.168.2.91 | SonarQube, Trivy | 1 CPU, 3GB RAM, 10GB Disk |
+| **git.local** | 192.168.2.90 | Gitea, Image Registry | 1 CPU, 1.5GB RAM, 15GB Disk |
+| **vault.local** | 192.168.2.92 | Hashicorp Vault | 1 CPU, 512MB RAM, 5GB Disk |
 
 ## Dizin Yapısı
 - `/terraform/modules/`: Her bir sunucu için özelleştirilmiş Terraform modülleri.

@@ -9,15 +9,8 @@ Grafana veri kaynakları (Prometheus ve Loki), konteyner her başladığında ot
   - **Prometheus:** `http://prometheus:9090` (Varsayılan veri kaynağı)
   - **Loki:** `http://loki:3100`
 
-## 📊 Dashboard Otomasyonu (Unified Observability)
-Altyapıdaki tüm sunucuları tek ekranda izlemeyi sağlayan "eShop Unified Observability" dashboard'u sisteme entegre edildi.
-- **Dosya:** `ansible/templates/monitoring/unified-dashboard.json.j2`
-- **Sağlayıcı:** `ansible/templates/monitoring/dashboard-provider.yml.j2`
-
-### Dashboard Özellikleri:
-1. **Host Değişkeni:** Üstteki menüden sunucu seçimi yapılabilir.
-2. **Service Değişkeni:** Seçili sunucudaki konteyner/mikroservis bazlı filtreleme yapılabilir.
-3. **Metrik + Log:** CPU/RAM kullanım grafikleri ile uygulama logları aynı zaman çizelgesinde alt alta gösterilir.
+## 📊 Dashboard Durumu: "Clean Slate" (Temiz Sayfa)
+Şu aşamada tüm hazır dashboard'lar sistemden kaldırılmış ve Grafana panelinde "temiz bir sayfa" açılmıştır. Bu sayede projenin ilerleyen safhalarında (Mikroservis deployment) ihtiyaca özel daha verimli dashboard'lar oluşturulması hedeflenmektedir.
 
 ## 🛠️ Uygulama Adımları
 Ansible playbook (`playbooks/monitoring-setup.yml`) ile şu işlemler yapılmıştır:
