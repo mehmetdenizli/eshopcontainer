@@ -46,6 +46,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 17. **Checkpoint:** `argocd-ready-v1` etiketiyle sistem bu noktada sabitlendi.
 18. **Manuel Manifest Stratejisi:** `manifests/` dizini oluşturuldu; altyapı ve uygulama servisleri için ham Kubernetes YAML dosyaları hazırlandı.
 19. **K8s Deployment (Success):** Tüm mikroservisler ve altyapı (Postgres, Redis, RabbitMQ) K3s üzerinde ayağa kaldırıldı. Insecure registry ve `regcred` secret yapılandırması tamamlandı. Podlar `Running` durumunda.
+20. **Gateway API:** Ingress yerine modern Gateway API (`eshop-gateway`) ve `HTTPRoute` yapısı kuruldu. Traefik 3.x üzerinde 5 farklı domain (`eshop.local`, `identity.local` vb.) için rota tanımlandı.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
