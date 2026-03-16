@@ -1,0 +1,50 @@
+---
+- name: Hashicorp Vault (Secret Management) Kurulumu
+  hosts: vault
+  become: true
+  vars:
+    vault_dir: "/home/ubuntu/vault"
+
+  tasks:
+    - name: Vault Klasör Yapısını Oluştur
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: 100
+        group: 1000
+        mode: "0755"
+      loop:
+        - "{{ vault_dir }}"
+        - "{{ vault_dir }}/config"
+        - "{{ vault_dir }}/data"
+        - "{{ vault_dir }}/logs"
+
+    - name: Vault Konfigürasyonunu Hazırla
+      template:
+        src: "../templates/vault/config.hcl.j2"
+        dest: "{{ vault_dir }}/config/vault.hcl"
+        owner: 100
+        group: 1000
+
+    - name: Docker Compose Dosyasını Hazırla
+      template:
+        src: "../templates/vault/docker-compose.yml.j2"
+        dest: "{{ vault_dir }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Vault Konteynerını Başlat
+      community.docker.docker_compose_v2:
+        project_src: "{{ vault_dir }}"
+        state: present
+
+    - name: Vault'un Hazır Olmasını Bekle
+      wait_for:
+        port: 8200
+        host: "{{ ansible_host }}"
+        delay: 5
+        timeout: 30
+
+    - name: Kurulum Bilgisini Yazdır
+      debug:
+        msg: "Vault Hazır: http://{{ ansible_host }}:8200"

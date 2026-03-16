@@ -1,0 +1,106 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: webapp-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: eshop-gateway
+  hostnames:
+    - "eshop.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: eshop-headers
+      backendRefs:
+        - name: webapp
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: identity-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: eshop-gateway
+  hostnames:
+    - "identity.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: eshop-headers
+      backendRefs:
+        - name: identity-api
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: catalog-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: eshop-gateway
+  hostnames:
+    - "catalog.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: catalog-api
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: basket-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: eshop-gateway
+  hostnames:
+    - "basket.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: basket-api
+          port: 8080
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ordering-route
+  namespace: default
+spec:
+  parentRefs:
+    - name: eshop-gateway
+  hostnames:
+    - "ordering.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ordering-api
+          port: 8080

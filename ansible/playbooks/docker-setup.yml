@@ -1,0 +1,63 @@
+---
+- name: Tüm Sunuculara Docker ve Docker Compose Kurulumu
+  hosts: all
+  become: true
+  tasks:
+    - name: Gerekli Paketleri Kur (Apt)
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - python3-pip
+          - python3-setuptools
+        state: present
+        update_cache: yes
+
+    - name: Docker GPG Anahtarını Ekle
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Docker Repository'sini Ekle
+      apt_repository:
+        repo: "deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Docker Engine ve CLI Kur
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Docker Servisini Başlat ve Enable Et
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: "ubuntu kullanicisini docker grubuna ekle"
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Docker SDK for Python Kur (Ansible Modülleri İçin)
+      apt:
+        name: python3-docker
+        state: present
+
+    - name: Kurulumu Doğrula
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Docker Versiyonunu Göster
+      debug:
+        msg: "Sunucuda kurulu Docker versiyonu: {{ docker_version.stdout }}"

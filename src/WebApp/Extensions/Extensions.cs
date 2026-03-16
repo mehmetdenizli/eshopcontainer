@@ -58,6 +58,7 @@ public static class Extensions
         JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
         var identityUrl = configuration.GetRequiredValue("IdentityUrl");
+        var identityUrlExternal = configuration.GetValue("IdentityUrlExternal", identityUrl);
         var callBackUrl = configuration.GetRequiredValue("CallBackUrl");
         var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 60);
 
@@ -72,11 +73,12 @@ public static class Extensions
         .AddOpenIdConnect(options =>
         {
             options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.Authority = identityUrl;
+            options.Authority = identityUrl;   // server-side: Docker internal URL for discovery & token exchange
             options.SignedOutRedirectUri = callBackUrl;
             options.ClientId = "webapp";
             options.ClientSecret = "secret";
             options.ResponseType = "code";
+            options.ResponseMode = "query"; // [DÜZELTME] POST yerine GET (Query) kullanarak SameSite çerez sorunlarını aşar.
             options.SaveTokens = true;
             options.GetClaimsFromUserInfoEndpoint = true;
             options.RequireHttpsMetadata = false;
@@ -84,6 +86,30 @@ public static class Extensions
             options.Scope.Add("profile");
             options.Scope.Add("orders");
             options.Scope.Add("basket");
+
+            // [DÜZELTME] "Correlation Failed" hatasını HTTP ortamında çözmek için çerez politikası.
+            options.NonceCookie.SameSite = SameSiteMode.Lax;
+            options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+            options.NonceCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+            // Rewrite the authorization endpoint URL for browser redirect (internal → external)
+            options.Events = new OpenIdConnectEvents
+            {
+                OnRedirectToIdentityProvider = context =>
+                {
+                    context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress
+                        .Replace(identityUrl, identityUrlExternal, StringComparison.OrdinalIgnoreCase);
+                    return Task.CompletedTask;
+                },
+                // [DÜZELTME] Logout (Signout) sırasında da dahili URL'yi (identity-api) harici URL (identity.local) ile değiştir.
+                OnRedirectToIdentityProviderForSignOut = context =>
+                {
+                    context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress
+                        .Replace(identityUrl, identityUrlExternal, StringComparison.OrdinalIgnoreCase);
+                    return Task.CompletedTask;
+                }
+            };
         });
 
         // Blazor auth services

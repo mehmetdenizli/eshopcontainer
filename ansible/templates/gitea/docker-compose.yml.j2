@@ -1,0 +1,51 @@
+version: "3"
+
+networks:
+  gitea:
+    external: false
+
+services:
+  server:
+    image: gitea/gitea:1.22.0
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+      - GITEA__packages__ENABLED=true
+      - GITEA__packages__CLEANUP_RULE_ENABLED=true
+      - GITEA__packages_0X2E_cleanup__KEEP_LAST_VERSIONS=1
+      - GITEA__packages_0X2E_cleanup__OLDER_THAN=0s
+      - GITEA__packages_0X2E_cleanup__REMOVE_VERSIONS_MATCHING=(.*)
+      - GITEA__packages_0X2E_cleanup__KEEP_VERSIONS_MATCHING=impossible_regex_to_not_match_anything
+      - GITEA__cron_0X2E_package_cleanup__ENABLED=true
+      - GITEA__cron_0X2E_package_cleanup__RUN_AT_START=true
+      - GITEA__cron_0X2E_package_cleanup__SCHEDULE=@every 5m
+    restart: always
+    networks:
+      - gitea
+    volumes:
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
+    networks:
+      - gitea
+    volumes:
+      - ./postgres:/var/lib/postgresql/data

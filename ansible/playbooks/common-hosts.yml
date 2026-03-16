@@ -1,0 +1,23 @@
+---
+- name: Tüm Sunucular İçin Ortak Hosts Dosyası Yapılandırması
+  hosts: all
+  become: true
+  tasks:
+    - name: Cloud-init manage_etc_hosts Kapat (Kalıcılık İçin)
+      lineinfile:
+        path: /etc/cloud/cloud.cfg
+        regexp: "^manage_etc_hosts:"
+        line: "manage_etc_hosts: false"
+        insertafter: "^# Example cloud-config"
+        create: true
+
+    - name: /etc/hosts Dosyasına Tüm Envanteri Ekle
+      blockinfile:
+        path: /etc/hosts
+        marker: "# {mark} ANSIBLE MANAGED HOSTS - ESHOP DEV"
+        block: |
+          {% for host in groups['all'] %}
+          {{ hostvars[host]['ansible_host'] }} {{ host }}
+          {% endfor %}
+          192.168.2.85 k3s-master-api  # K8s API için alias
+          192.168.2.89 argo.local      # GitOps UI

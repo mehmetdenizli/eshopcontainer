@@ -1,0 +1,26 @@
+#cloud-config
+hostname: vault-srv
+manage_etc_hosts: true
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVVb3I7bMDyIe+o4mV7Awe3dxtYMiE47BRBVF0+BLzqgAfBhqrajyXrNWyj4J6EA/xQJ+Cia21kGDP+rtY4eXr/27aHeVfHVBmaeALbQm7pTxQ7Fbucs/ss3RcMrOpCCPexnIon1DlkoLYn0o1nAjFvsSbjXUp6z6P+1Jby+sTtG0rS2hxcRV+0k7F3O+SMs2X+hvJXxMxurDMQ43omeCoGYhgHxya8USPO+A88amIEOINqFvKeVHqjZfCt6yyzUBbQHEUgBJ0N/XLhPuCJQytIANE2JXT0S112Q1vt5fkxZ4lQsv6EzhyxN91L84rnCBKa1d/APUI9PnrR8r1XXKNVr2IT0Fi0oSx9VGe6LWZMBHCZYu3tzn1mSYseGPHvD7N3SJdpXRbkPMO/RpxHNrSKXt/7gViIHbLpRrItMDiekpUXodJnU+Gijp32VhKmyqCmUWinGqFdwTh4Y5/ZfQO2802yQtzrN9Ro8ogH9uin8W6gMt/IhUHzGWjXqIDEgd9XDgllAA4HtuRVdgG9RSkhRKYDTNFzJdm2UOrOa3dC5UijRhaNHO+0//VrHEB/iDpamG9Dnv8TVs9otICqHhFSxfKZyBKFtrc6Gw6nXMhCpRuwZYhWZcCoDdDqsiF6d2BypJMJ1IQRKxweGJwgJknWcJJ6mi4Ha2aw+pLvMsXTw== denizli@Mac.home
+
+
+package_update: true
+package_upgrade: true
+packages:
+  - curl
+  - git
+  - jq
+  - unzip
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+runcmd:
+  - timedatectl set-timezone Europe/Istanbul
+  - echo "Instance vault-srv is ready." >> /var/log/provision.log

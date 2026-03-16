@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-api
+  template:
+    metadata:
+      labels:
+        app: identity-api
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: identity-api
+          image: git.local:3000/gitea/identity-api:latest
+          imagePullPolicy: Always
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__identitydb
+              value: Host=postgres;Database=identitydb;Username=postgres;Password=postgres
+            - name: WebAppClient
+              value: http://eshop.local
+            - name: IssuerUri
+              value: http://identity.local
+            - name: ASPNETCORE_FORWARDEDHEADERS_ENABLED
+              value: "true"
+            # Proxy'den gelen her türlü Header'a güven (Kubernetes iç ağ güvenliği için)
+            - name: ASPNETCORE_FORWARDEDHEADERS_ALLOWEDNETWORKS
+              value: "0.0.0.0/0"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-api
+  namespace: default
+spec:
+  selector:
+    app: identity-api
+  ports:
+    - port: 8080
+      targetPort: 8080

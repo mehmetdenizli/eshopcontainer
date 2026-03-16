@@ -1,0 +1,40 @@
+---
+- name: Gitea (Git & Registry) Sunucusu Kurulumu
+  hosts: git
+  become: true
+  vars:
+    gitea_dir: "/home/ubuntu/gitea"
+
+  tasks:
+    - name: Gitea Klasörünü Oluştur
+      file:
+        path: "{{ gitea_dir }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Docker Compose Dosyasını Hazırla
+      template:
+        src: "../templates/gitea/docker-compose.yml.j2"
+        dest: "{{ gitea_dir }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Gitea Konteynerlarını Başlat
+      community.docker.docker_compose_v2:
+        project_src: "{{ gitea_dir }}"
+        state: present
+
+    - name: Gitea'nın Hazır Olmasını Bekle
+      uri:
+        url: "http://localhost:3000"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 30
+      delay: 5
+
+    - name: Kurulum Bilgisini Yazdır
+      debug:
+        msg: "Gitea Sunucusu Hazır: http://{{ ansible_host }}:3000"

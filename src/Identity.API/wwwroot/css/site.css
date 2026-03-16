@@ -313,7 +313,17 @@ body {
     align-items: flex-end;
     gap: 8px;
     align-self: stretch;
-    background: #000;
+    background: #83D01B;
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-container .btn.btn-primary:hover {
+    background: #6ba616;
+    color: white;
 }
 
 .icon {

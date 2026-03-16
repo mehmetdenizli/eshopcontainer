@@ -1,0 +1,55 @@
+---
+- name: ArgoCD Reverse Proxy ve Yönetim Araçları (Jenkins Server)
+  hosts: jenkins.local
+  become: true
+  tasks:
+    - name: Nginx Kurulumu
+      apt:
+        name: nginx
+        state: present
+        update_cache: true
+
+    - name: ArgoCD Nginx Konfigürasyonu Oluştur
+      copy:
+        dest: /etc/nginx/sites-available/argocd
+        content: |
+          server {
+              listen 80;
+              server_name argo.local;
+
+              location / {
+                  proxy_pass http://192.168.2.101;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  
+                  # ArgoCD için gerekli
+                  proxy_ssl_verify off;
+                  proxy_read_timeout 90;
+                  proxy_connect_timeout 90;
+                  proxy_redirect off;
+              }
+          }
+
+    - name: Konfigürasyonu Aktif Et
+      file:
+        src: /etc/nginx/sites-available/argocd
+        dest: /etc/nginx/sites-enabled/argocd
+        state: link
+
+    - name: Varsayılan Nginx Sitesini Devre Dışı Bırak (Opsiyonel)
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Nginx Servisini Yeniden Başlat
+      service:
+        name: nginx
+        state: restarted
+
+    - name: ArgoCD CLI İndir
+      get_url:
+        url: https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        dest: /usr/local/bin/argocd
+        mode: "0755"
