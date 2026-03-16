@@ -12,6 +12,17 @@ spec:
     metadata:
       labels:
         app: identity-api
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "eshop-role"
+        vault.hashicorp.com/agent-inject-secret-identity-api: "secret/eshop/identity-api"
+        # Şifreleri .env formatında dosyaya yazar
+        vault.hashicorp.com/agent-inject-template-identity-api: |
+          {{- with secret "secret/eshop/identity-api" -}}
+          {{- range $k, $v := .Data.data -}}
+          export {{ $k }}="{{ $v }}"
+          {{- end -}}
+          {{- end -}}
     spec:
       imagePullSecrets:
         - name: regcred
@@ -19,11 +30,14 @@ spec:
         - name: identity-api
           image: git.local:3000/gitea/identity-api:latest
           imagePullPolicy: Always
+          # Vault'tan gelen şifreleri (.env formatında) yükler ve uygulamayı başlatır
+          command: ["/bin/sh", "-c"]
+          args:
+            [". /vault/secrets/identity-api && exec dotnet Identity.API.dll"]
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
-            - name: ConnectionStrings__identitydb
-              value: Host=postgres;Database=identitydb;Username=postgres;Password=postgres
+            # [VAULT] ConnectionStrings__identitydb buradaki env listesinden kaldırıldı, Vault'tan gelecek.
             - name: WebAppClient
               value: http://eshop.local
             - name: IssuerUri

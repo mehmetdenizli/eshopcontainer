@@ -50,7 +50,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 21. **OIDC & Proxy Fix:** WebApp ve IdentityServer arasındaki "Correlation Failed" hatası çözüldü. HTTP (non-TLS) ortamında `ResponseMode=Query`, `SameSite=Lax` ve `Logout` (OnRedirectToIdentityProviderForSignOut) yönlendirme düzeltmeleri uygulandı. Login ve Logout akışları tarayıcı üzerinden doğrulandı.
 22. **Gitea Agresif Temizlik:** Container Registry disk alanını korumak için 5 dakikalık (`@every 5m`) cron ve "en son 1 versiyonu tut" (`KEEP_LAST_VERSIONS=1`) kuralı hem `app.ini` hem de Web UI üzerinden aktif edildi.
 23. **Checkpoint:** `k8s-oidc-ready-v1` etiketiyle sistem bu noktada sabitlendi. Gitea cleanup ve K8s OIDC login/logout akışları doğrulanmış durumda.
-24. **Vault Entegrasyonu:** Hashicorp Vault unseal edildi, Kubernetes (K3s) auth metodu aktif edildi ve Vault Agent Injector cluster'a kuruldu. Podların Vault'tan şifre çekebilmesi için altyapı hazır.
+24. **Vault Entegrasyonu:** Hashicorp Vault unseal edildi, Kubernetes (K3s) auth metodu aktif edildi ve Vault Agent Injector cluster'a kuruldu. `identity-api` ve `webapp` servisleri şifrelerini artık Vault Agent üzerinden çalışma anında (runtime) çekiyor. YAML'lardaki plain-text şifreler temizlendi. ✅
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **Validation:** Kimlik doğrulama akışının tarayıcı üzerinden uçtan uca doğrulanması ve kullanıcı girişinin tamamlanması.
@@ -63,7 +63,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 | **Gitea & Registry** | [http://192.168.2.90:3000](http://192.168.2.90:3000) | 192.168.2.90 | ✅ Aktif |
 | **Jenkins** | [http://192.168.2.89:8080](http://192.168.2.89:8080) | 192.168.2.89 | ✅ Aktif |
 | **SonarQube** | [http://192.168.2.91:9000](http://192.168.2.91:9000) | 192.168.2.91 | ✅ Aktif |
-| **Vault** | [http://192.168.2.92:8200](http://192.168.2.92:8200) | 192.168.2.92 | ✅ Kilitli |
+| **Vault** | [http://192.168.2.92:8200](http://192.168.2.92:8200) | 192.168.2.92 | ✅ Aktif (Unsealed) |
 | **Grafana** | [http://192.168.2.87:3003](http://192.168.2.87:3003) | 192.168.2.87 | ✅ Aktif |
 | **ArgoCD** | [http://argo.local](http://argo.local) | 192.168.2.89 | ✅ Aktif |
 

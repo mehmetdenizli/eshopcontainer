@@ -12,6 +12,17 @@ spec:
     metadata:
       labels:
         app: webapp
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "eshop-role"
+        vault.hashicorp.com/agent-inject-secret-webapp: "secret/eshop/webapp"
+        # Şifreleri .env formatında dosyaya yazar
+        vault.hashicorp.com/agent-inject-template-webapp: |
+          {{- with secret "secret/eshop/webapp" -}}
+          {{- range $k, $v := .Data.data -}}
+          export {{ $k }}="{{ $v }}"
+          {{- end -}}
+          {{- end -}}
     spec:
       imagePullSecrets:
         - name: regcred
@@ -19,6 +30,9 @@ spec:
         - name: webapp
           image: git.local:3000/gitea/webapp:latest
           imagePullPolicy: Always
+          # Vault'tan gelen şifreleri (.env formatında) yükler ve uygulamayı başlatır
+          command: ["/bin/sh", "-c"]
+          args: [". /vault/secrets/webapp && exec dotnet WebApp.dll"]
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
@@ -34,8 +48,7 @@ spec:
               value: http://basket-api:8080
             - name: services__ordering-api__http__0
               value: http://ordering-api:8080
-            - name: ConnectionStrings__eventbus
-              value: amqp://guest:guest@rabbitmq:5672
+            # [VAULT] ConnectionStrings__eventbus buradaki env listesinden kaldırıldı, Vault'tan gelecek.
             - name: ASPNETCORE_FORWARDEDHEADERS_ENABLED
               value: "true"
             - name: ASPNETCORE_FORWARDEDHEADERS_ALLOWEDNETWORKS

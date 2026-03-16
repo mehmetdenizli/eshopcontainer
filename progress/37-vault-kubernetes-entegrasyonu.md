@@ -22,8 +22,7 @@ Bu aşamada, mikroservislerin hassas verilerini (şifreler, connection stringler
 - **Helm Chart:** `hashicorp/vault`
 - **Ansible Playbook:** `ansible/playbooks/vault-setup.yml`
 
-## Sonraki Adımlar
-- [ ] Mikroservis deployment dosyalarına Vault annotation'larını ekleyerek verileri canlıya almak.
-- [ ] Statik environment variable'ları deployment YAML'larından temizlemek.
+## Sonuç
+Mikroservislerin (`identity-api`, `webapp`) hassas verileri Vault'a taşınmış ve Vault Agent Injector aracılığıyla podlara otomatik enjeksiyon başarıyla gerçekleştirilmiştir. YAML dosyalarındaki düz metin şifreler temizlenmiş, projenin Zero Trust güvenliği pekiştirilmiştir. ✅
 
 **Durum:** Başarıyla Tamamlandı ✅
