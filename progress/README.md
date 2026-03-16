@@ -47,3 +47,4 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 20. [28-git-onarim-ve-branch-yonetimi.md](./28-git-onarim-ve-branch-yonetimi.md) - Git Onarım ve Yanlış Branch Kurtarma Operasyonu
 21. [29-helm-mimarisi-ve-standartlar.md](./29-helm-mimarisi-ve-standartlar.md) - Helm Mimarisi ve Template Standardizasyonu
 22. [30-helm-oncesi-eksiklik-analizi.md](./30-helm-oncesi-eksiklik-analizi.md) - Helm Öncesi Eksiklik Analizi ve Hazırlık Planı
+23. [31-manuel-manifest-stratejisi.md](./31-manuel-manifest-stratejisi.md) - Kubernetes Manifestleri ve Manuel Uygulama Stratejisi

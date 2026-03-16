@@ -44,6 +44,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 15. **Checkpoint:** Sistem bu haliyle `monitoring-stable-v1` etiketiyle (git tag) damgalandı ve repoya puslandı.
 16. **GitOps Dönüşümü:** ArgoCD K3s üzerine kuruldu, Jenkins sunucusu üzerinden Proxy (`argo.local`) ve CLI erişimi yapılandırıldı. Insecure mode ile SSL sorunları çözüldü.
 17. **Checkpoint:** `argocd-ready-v1` etiketiyle sistem bu noktada sabitlendi.
+18. **Manuel Manifest Stratejisi:** `manifests/` dizini oluşturuldu; altyapı ve uygulama servisleri için ham Kubernetes YAML dosyaları hazırlandı.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
