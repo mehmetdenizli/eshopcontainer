@@ -17,7 +17,7 @@ spec:
         - name: regcred
       containers:
         - name: webapp
-          image: git.local:3000/admin/webapp:latest
+          image: git.local:3000/gitea/webapp:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development

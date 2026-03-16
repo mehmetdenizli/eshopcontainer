@@ -17,7 +17,7 @@ spec:
         - name: regcred
       containers:
         - name: basket-api
-          image: git.local:3000/admin/basket-api:latest
+          image: git.local:3000/gitea/basket-api:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development

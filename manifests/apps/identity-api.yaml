@@ -17,7 +17,7 @@ spec:
         - name: regcred
       containers:
         - name: identity-api
-          image: git.local:3000/admin/identity-api:latest
+          image: git.local:3000/gitea/identity-api:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development

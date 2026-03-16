@@ -17,7 +17,7 @@ spec:
         - name: regcred
       containers:
         - name: catalog-api
-          image: git.local:3000/admin/catalog-api:latest
+          image: git.local:3000/gitea/catalog-api:latest
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
