@@ -8,8 +8,11 @@ Tarayıcınızdan `http://192.168.2.90:3000` adresine gittiğinizde Gitea sizi k
 ### 📍 Dikkat Edilmesi Gereken Ayarlar:
 1. **Veritabanı Ayarları:** PostgreSQL bilgileri Ansible tarafından otomatik olarak yapılandırıldı. Lütfen bu kısımlara dokunmayın.
 2. **Genel Ayarlar:** SSH portu `2222`, HTTP portu `3000` olarak sabitlenmiştir.
-3. **Yönetici Hesabı Oluşturma (KRİTİK):** Sayfanın en altındaki **"Yönetici Hesabı Ayarları"** (Administrator Account Settings) bölümünü açın ve kendi özel kullanıcı adınızı ve şifrenizi tanımlayın.
-    - *Not: Eğer burada hesap oluşturmazsanız, ilk kayıt olan kullanıcı otomatik olarak admin olur.*
+### 🔐 Güncel Giriş Bilgileri (Reset Sonrası):
+- **URL:** [http://192.168.2.90:3000](http://192.168.2.90:3000)
+- **Kullanıcı Adı:** `gitea`
+- **Şifre:** `Eshop123!`
+- **E-posta:** `foriinji@gmail.com`
 
 ## 💾 2. İmaj Tasarrufu: Paket Temizleme Kuralları (Keep 2)
 Projemizde onlarca mikroservis sürekli build edileceği için disk alanını verimli kullanmak zorundayız. Gitea'nın paket temizleme özelliği, her imajın sadece son 2 sürümünü tutarak eski çöpleri temizler.
@@ -55,12 +58,23 @@ docker exec -u 1000 gitea gitea admin user create \
   --admin
 ```
 
-## 🌐 5. SSH & Git Erişimi
-Gitea SSH portu `2222` olarak yapılandırılmıştır. Git komutlarını bu port üzerinden kullanmalısınız:
+## ⚠️ 6. Karşılaşılan Hatalar ve Şifre Sıfırlama
 
+Eğer admin şifresini unutursanız veya kullanıcı adınızı kontrol etmeniz gerekirse, Ansible kontrol makinesinden (veya doğrudan `git.local` üzerinden) şu komutları kullanabilirsiniz:
+
+### Kullanıcı Listesini Görme:
 ```bash
-git clone ssh://git@192.168.2.90:2222/[kullanici]/[repo].git
+docker exec -u git gitea gitea admin user list
 ```
+
+### Şifre Sıfırlama:
+```bash
+docker exec -u git gitea gitea admin user change-password \
+  --username gitea \
+  --password 'YeniSifre123!'
+```
+
+> **Önemli:** Komutu çalıştırırken `-u git` parametresi kritiktir. Gitea güvenlik gereği root kullanıcısı ile bu komutun çalıştırılmasına izin vermez.
 
 ---
 **Önemli Not:** Gitea sıfırlandığı için bu ayarları bir kez yapmanız yeterlidir. Proje ilerledikçe bu merkez bizim tüm CI/CD süreçlerimizin kalbi olacak.
