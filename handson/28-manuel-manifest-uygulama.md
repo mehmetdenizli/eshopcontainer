@@ -1,35 +1,55 @@
 # Hands-on 28: Manuel Kubernetes Manifestleri ile Dağıtım
 
-Bu rehber, oluşturulan Kubernetes manifestlerinin cluster'a nasıl uygulanacağını açıklar.
+Bu rehber, eShopOnContainers projesinin Kubernetes (K3s) üzerine manuel manifest (YAML) dosyalarıyla nasıl dağıtıldığını ve sunucu tarafındaki operasyonel adımları açıklar.
 
-## 📁 Manifest Dizini Yapısı
-`manifests/` klasörü altındaki yapı şu şekildedir:
-- `infrastructure/`: Veritabanı ve Mesaj kuyruğu gibi servisler.
-- `apps/`: eShop mikroservisleri.
+## 📁 1. Manifestlerin Sunucuya Senkronizasyonu
+Local makinedeki (Macbook) `manifests/` dizini, Ansible kullanılarak K3s Master node'una (`/home/ubuntu/manifests/`) kopyalanmıştır.
 
-## 🚀 Uygulama Sırası
-
-### 1. Altyapıyı Ayağa Kaldır
-Önce veritabanı ve kuyruk servislerini başlatın:
 ```bash
-kubectl apply -f manifests/infrastructure/
-```
-Podların durumunu kontrol edin:
-```bash
-kubectl get pods
+# Macbook üzerinden çalıştırma:
+ansible k3s_master -i ansible/inventory/hosts.ini -m file -a "path=/home/ubuntu/manifests state=directory" --become
+ansible k3s_master -i ansible/inventory/hosts.ini -m copy -a "src=manifests/ dest=/home/ubuntu/manifests/" --become
 ```
 
-### 2. Registry Secret Oluştur (Önemli)
-Uygulamaları deploy etmeden önce `regcred` secret'ı mutlaka oluşturulmalıdır (Hand-on 27'de anlatıldığı gibi).
+## 🚀 2. Uygulama ve Bağımlılık Sırası
 
-### 3. Uygulamaları Dağıt
-İmajlar Gitea'ya pushlandıktan sonra uygulamaları başlatın:
+### Adım 1: Infrastructure (Altyapı)
+Önce Postgres, Redis ve RabbitMQ servisleri ayağa kaldırılır. Bu servisler verilerini şu an için pod içinde tutmaktadır (StatefulSet/PVC yapısına Helm aşamasında geçilecektir).
+
 ```bash
-kubectl apply -f manifests/apps/
+kubectl apply -f /home/ubuntu/manifests/infrastructure/
 ```
 
-## ⚠️ Karşılaşılan Hatalar ve Çözümleri
-> **Not:** Uygulama sırasında oluşacak hatalar (CrashLoopBackOff vb.) burada dökümante edilecektir.
+### Adım 2: Application (Uygulamalar)
+İmajlar Registry'ye (`git.local:3000`) pushlandıktan sonra mikroservisler dağıtılır:
+
+```bash
+kubectl apply -f /home/ubuntu/manifests/apps/
+```
+
+## 🔍 3. Doğrulama ve Sorun Giderme
+
+### Pod Durumlarını Kontrol Etme:
+```bash
+kubectl get pods -w
+```
+
+### ImagePullBackOff Sorunu:
+Eğer imaj pushlanmadan önce deployment yapıldıysa veya imaj bulunamadıysa `ImagePullBackOff` hatası alınabilir. İmaj pushlandıktan sonra ilgili podu silerek yeniden oluşmasını tetikleyin:
+```bash
+kubectl delete pod <pod-adi>
+```
+
+### Pod Detaylarını İnceleme:
+Hata analizi için (örneğin Registry login hatası):
+```bash
+kubectl describe pod <pod-adi>
+```
+
+## 📜 4. Kaydedilen Önemli Kararlar
+- **Resource Limits:** Tüm podlara CPU (limits: 250m-500m) ve Memory (limits: 256Mi-512Mi) kısıtları eklendi.
+- **Service Naming:** Kubernetes iç haberleşmesi için `identity-api`, `catalog-api` gibi standart servis isimleri kullanıldı (K8s DNS).
+- **Environment:** Veritabanı bağlantı cümleleri (ConnectionStrings) bu `Internal DNS` isimlerine göre güncellendi.
 
 ---
-Bu aşamadan sonra her şeyin çalıştığından emin olduğumuzda, bu manifestleri Helm şablonlarına dönüştürerek ArgoCD'ye teslim edeceğiz.
+Bu "Manuel" aşama, Helm şablonlarımızın doğruluğunu test etmek için bir referans noktasıdır.

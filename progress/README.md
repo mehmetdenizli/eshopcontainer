@@ -48,3 +48,4 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 21. [29-helm-mimarisi-ve-standartlar.md](./29-helm-mimarisi-ve-standartlar.md) - Helm Mimarisi ve Template Standardizasyonu
 22. [30-helm-oncesi-eksiklik-analizi.md](./30-helm-oncesi-eksiklik-analizi.md) - Helm Öncesi Eksiklik Analizi ve Hazırlık Planı
 23. [31-manuel-manifest-stratejisi.md](./31-manuel-manifest-stratejisi.md) - Kubernetes Manifestleri ve Manuel Uygulama Stratejisi
+24. [32-manuel-dagitim-ve-dogrulama.md](./32-manuel-dagitim-ve-dogrulama.md) - Manuel Kubernetes Dağıtımının Başarıyla Tamamlanması

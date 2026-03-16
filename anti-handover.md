@@ -45,6 +45,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 16. **GitOps Dönüşümü:** ArgoCD K3s üzerine kuruldu, Jenkins sunucusu üzerinden Proxy (`argo.local`) ve CLI erişimi yapılandırıldı. Insecure mode ile SSL sorunları çözüldü.
 17. **Checkpoint:** `argocd-ready-v1` etiketiyle sistem bu noktada sabitlendi.
 18. **Manuel Manifest Stratejisi:** `manifests/` dizini oluşturuldu; altyapı ve uygulama servisleri için ham Kubernetes YAML dosyaları hazırlandı.
+19. **K8s Deployment (Success):** Tüm mikroservisler ve altyapı (Postgres, Redis, RabbitMQ) K3s üzerinde ayağa kaldırıldı. Insecure registry ve `regcred` secret yapılandırması tamamlandı. Podlar `Running` durumunda.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
