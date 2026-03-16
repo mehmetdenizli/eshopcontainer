@@ -67,9 +67,10 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 Her teknik adım tamamlandığında veya önemli bir değişiklik yapıldığında aşağıdaki dosyalar hiyerarşik olarak güncellenir:
 
 1. **`/progress/` Dizini:** Yapılan işlemin teknik özeti, kullanılan kaynaklar ve bir sonraki adımın planı (Örn: `13-sunucularin-moduler-kurulumu.md`). Numaralandırma 11'den devam eder.
-2. **`/handson/` Dizini:** Uygulamalı rehberler, komutlar ve konfigürasyon dosyalarının içerikleri burada paylaşılır. Başkalarının projeyi tekrar edebilmesi için "hands-on" formatındadır.
+2. **`/handson/` Dizini:** Uygulamalı rehberler, komutlar ve konfigürasyon dosyalarının içerikleri burada paylaşılır. Başkalarının projeyi tekrar edebilmesi için "hands-on" formatındadır. **Teknik adım sürecinde karşılaşılan hatalar ve giderilme yolları burada detaylı olarak kayıt altına alınır.**
 3. **`progress/README.md` & `progress/roadmap.md`:** Yeni eklenen dokümanlar README'ye linklenir, roadmap üzerindeki ilgili adım `[x]` olarak işaretlenir.
 4. **`anti-handover.md`:** (Bu dosya) Projenin genel durumu, aktif envanter, IP listesi ve tamamlanan adımlar güncellenerek yeni oturumlar için hazır tutulur.
 5. **`hosts_to_paste.txt`:** Eğer IP adresleri değişmişse veya yeni sunucu eklenmişse, kullanıcının kopyalaması için bu dosya güncellenir.
+6. **Git Commit & Push:** Her teknik adım tamamlandığında, `dev` branch'ine teknik adımı açıklayacak şekilde commit ve push yapılır.
 
 **ANTIGRAVITY NOTU:** Yeni oturum açıldığında bu dosyayı (`anti-handover.md`) okuyarak kurallara ve kalınan yere göre devam et. Her yanıtın sonunda 'ONAY BEKLENİYOR' ibaresini ekle.
