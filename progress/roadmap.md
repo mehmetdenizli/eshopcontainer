@@ -31,8 +31,18 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 - [x] OIDC Correlation ve Gateway API entegrasyonu.
 - [x] Uçtan uca testlerin yapılması (Login/Logout Başarılı).
 
-## Faz 5: GitOps ve Sürekli Dağıtım (Yeni)
+## Faz 5: GitOps ve Sürekli Dağıtım
 - [x] ArgoCD kurulumu ve K3s entegrasyonu.
-- [ ] Faz 1: Hashicorp Vault & K8s Secret Entegrasyonu.
-- [ ] Faz 2: Jenkins Shared Library & Security Scan (Sonar/Trivy).
-- [ ] Faz 3: Helm Chart & ArgoCD GitOps Otomasyonu.
+- [ ] Helm Chart mimarisinin kurulması.
+- [ ] GitOps (ArgoCD) ile otomatik senkronizasyon.
+
+## Faz 6: Secret Management & Security (Yeni)
+- [ ] Hashicorp Vault & K8s Secret Entegrasyonu.
+- [ ] Vault Agent Injector ile Pod bazlı secret yönetimi.
+- [ ] SonarQube Kod Kalite Tarama Entegrasyonu.
+- [ ] Trivy İmaj Güvenlik Tarama Entegrasyonu.
+
+## Faz 7: Uçtan Uca DevSecOps Otomasyonu (Next)
+- [ ] Jenkins Shared Library oluşturulması.
+- [ ] Uçtan uca Pipeline (Build -> Scan -> Push -> Sync) testi.
+- [ ] Multi-microservice deployment senaryoları.
