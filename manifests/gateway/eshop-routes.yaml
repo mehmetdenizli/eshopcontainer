@@ -13,6 +13,12 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: eshop-headers
       backendRefs:
         - name: webapp
           port: 8080
@@ -32,6 +38,12 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      filters:
+        - type: ExtensionRef
+          extensionRef:
+            group: traefik.io
+            kind: Middleware
+            name: eshop-headers
       backendRefs:
         - name: identity-api
           port: 8080

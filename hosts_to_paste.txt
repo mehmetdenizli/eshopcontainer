@@ -6,4 +6,5 @@
 192.168.2.91  security.local
 192.168.2.90  git.local
 192.168.2.92  vault.local
+192.168.2.100 eshop.local identity.local catalog.local basket.local ordering.local
 # --------------------------------------------------

@@ -1,0 +1,23 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: eshop-headers
+  namespace: default
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Port: "80"
+      X-Forwarded-Proto: "http"
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: eshop-cookie-fix
+  namespace: default
+spec:
+  headers:
+    customResponseHeaders:
+      # Çerezlerin SameSite değerini Lax yaparak (veya silerek) HTTP üzerinde Callback sorunlarını aşar
+      # Ancak bu response header ekleme olduğu için mevcutları değiştirmek zordur.
+      # Bunun yerine ForwardedHeaders ile uygulamanın doğru host/port görmesi önceliklidir.
+      X-ESHOP-FIX: "applied"

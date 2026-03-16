@@ -50,3 +50,4 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 23. [31-manuel-manifest-stratejisi.md](./31-manuel-manifest-stratejisi.md) - Kubernetes Manifestleri ve Manuel Uygulama Stratejisi
 24. [32-manuel-dagitim-ve-dogrulama.md](./32-manuel-dagitim-ve-dogrulama.md) - Manuel Kubernetes Dağıtımının Başarıyla Tamamlanması
 25. [33-gateway-api-gecisi.md](./33-gateway-api-gecisi.md) - Modern Kubernetes Gateway API Geçişi
+26. [34-oidc-korelasyon-ve-proxy-cozumu.md](./34-oidc-korelasyon-ve-proxy-cozumu.md) - OIDC Correlation Failed ve Proxy Çözümü

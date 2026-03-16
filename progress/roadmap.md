@@ -26,7 +26,8 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 ## Faz 4: İzleme ve Validasyon
 - [x] Prometheus & Grafana ile metrik takibi.
 - [x] Loki ile merkezi loglama.
-- [ ] eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
+- [x] eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
+- [x] OIDC Correlation ve Gateway API entegrasyonu.
 - [ ] Uçtan uca testlerin yapılması.
 
 ## Faz 5: GitOps ve Sürekli Dağıtım (Yeni)
