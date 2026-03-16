@@ -17,9 +17,9 @@ Gitea'yı varsayılan 24 saatlik yerine dakikalık temizlik yapmaya zorlamak iç
 - GITEA__packages_0X2E_cleanup__OLDER_THAN=0s
 - GITEA__packages_0X2E_cleanup__REMOVE_VERSIONS_MATCHING=(.*)
 
-# Temizlik görevini her 1 dakikada bir çalıştır
+# Temizlik görevini her 5 dakikada bir çalıştır
 - GITEA__cron_0X2E_package_cleanup__ENABLED=true
-- GITEA__cron_0X2E_package_cleanup__SCHEDULE=@every 1m
+- GITEA__cron_0X2E_package_cleanup__SCHEDULE=@every 5m
 ```
 
 ## 2. Web UI Ayarları (Zorunlu)

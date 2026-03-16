@@ -3,7 +3,7 @@
 Bu aşamada, kısıtlı disk alanını verimli kullanmak amacıyla Gitea Container Registry üzerinde "her mikroservis için sadece en son imajı tut" stratejisi uygulanmıştır.
 
 ## Teknik Detaylar
-1. **Cron Yapılandırması:** Gitea'nın paket temizleme motoru standart 24 saatten **1 dakikaya** (`@every 1m`) indirildi.
+1. **Cron Yapılandırması:** Gitea'nın paket temizleme motoru standart 24 saatten **5 dakikaya** (`@every 5m`) indirildi.
 2. **Global Temizlik Kuralları:** `app.ini` seviyesinde (Environment Variables) agresif temizlik aktif edildi:
     - `KEEP_LAST_VERSIONS=1`
     - `OLDER_THAN=0s`

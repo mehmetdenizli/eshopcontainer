@@ -48,7 +48,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 19. **K8s Deployment (Success):** Tüm mikroservisler ve altyapı (Postgres, Redis, RabbitMQ) K3s üzerinde ayağa kaldırıldı. Insecure registry ve `regcred` secret yapılandırması tamamlandı. Podlar `Running` durumunda.
 20. **Gateway API:** Ingress yerine modern Gateway API (`eshop-gateway`) ve `HTTPRoute` yapısı kuruldu. Traefik 3.x üzerinde 5 farklı domain (`eshop.local`, `identity.local` vb.) için rota tanımlandı.
 21. **OIDC & Proxy Fix:** WebApp ve IdentityServer arasındaki "Correlation Failed" hatası çözüldü. HTTP (non-TLS) ortamında `ResponseMode=Query`, `SameSite=Lax` ve `Logout` (OnRedirectToIdentityProviderForSignOut) yönlendirme düzeltmeleri uygulandı. Login ve Logout akışları tarayıcı üzerinden doğrulandı.
-22. **Gitea Agresif Temizlik:** Container Registry disk alanını korumak için dakikalık (`@every 1m`) cron ve "en son 1 versiyonu tut" (`KEEP_LAST_VERSIONS=1`) kuralı hem `app.ini` hem de Web UI üzerinden aktif edildi.
+22. **Gitea Agresif Temizlik:** Container Registry disk alanını korumak için 5 dakikalık (`@every 5m`) cron ve "en son 1 versiyonu tut" (`KEEP_LAST_VERSIONS=1`) kuralı hem `app.ini` hem de Web UI üzerinden aktif edildi.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **Validation:** Kimlik doğrulama akışının tarayıcı üzerinden uçtan uca doğrulanması ve kullanıcı girişinin tamamlanması.
