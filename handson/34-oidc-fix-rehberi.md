@@ -26,6 +26,36 @@ app.UseForwardedHeaders();
 // app.UseHttpsRedirection(); 
 ```
 
+`src/WebApp/Extensions/Extensions.cs` içindeki OIDC yapılandırması:
+
+```csharp
+.AddOpenIdConnect(options =>
+{
+    options.ResponseType = "code";
+    options.ResponseMode = "query"; // SameSite POST sorununu çözer
+    
+    // HTTP ortamında Çerez Politikası
+    options.NonceCookie.SameSite = SameSiteMode.Lax;
+    options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+    options.NonceCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRedirectToIdentityProvider = context => {
+            // Login redirect fix
+            context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress.Replace(identityUrl, identityUrlExternal);
+            return Task.CompletedTask;
+        },
+        OnRedirectToIdentityProviderForSignOut = context => {
+            // Logout redirect fix
+            context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress.Replace(identityUrl, identityUrlExternal);
+            return Task.CompletedTask;
+        }
+    };
+});
+```
+
 ## 2. Altyapı Katmanı (Kubernetes/Traefik Değişiklikleri)
 
 ### Middleware Tanımı

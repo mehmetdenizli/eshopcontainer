@@ -78,6 +78,7 @@ public static class Extensions
             options.ClientId = "webapp";
             options.ClientSecret = "secret";
             options.ResponseType = "code";
+            options.ResponseMode = "query"; // [DÜZELTME] POST yerine GET (Query) kullanarak SameSite çerez sorunlarını aşar.
             options.SaveTokens = true;
             options.GetClaimsFromUserInfoEndpoint = true;
             options.RequireHttpsMetadata = false;
@@ -85,10 +86,24 @@ public static class Extensions
             options.Scope.Add("profile");
             options.Scope.Add("orders");
             options.Scope.Add("basket");
+
+            // [DÜZELTME] "Correlation Failed" hatasını HTTP ortamında çözmek için çerez politikası.
+            options.NonceCookie.SameSite = SameSiteMode.Lax;
+            options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+            options.NonceCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
             // Rewrite the authorization endpoint URL for browser redirect (internal → external)
             options.Events = new OpenIdConnectEvents
             {
                 OnRedirectToIdentityProvider = context =>
+                {
+                    context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress
+                        .Replace(identityUrl, identityUrlExternal, StringComparison.OrdinalIgnoreCase);
+                    return Task.CompletedTask;
+                },
+                // [DÜZELTME] Logout (Signout) sırasında da dahili URL'yi (identity-api) harici URL (identity.local) ile değiştir.
+                OnRedirectToIdentityProviderForSignOut = context =>
                 {
                     context.ProtocolMessage.IssuerAddress = context.ProtocolMessage.IssuerAddress
                         .Replace(identityUrl, identityUrlExternal, StringComparison.OrdinalIgnoreCase);
