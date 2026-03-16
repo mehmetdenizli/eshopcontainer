@@ -45,3 +45,4 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 18. [26-grafana-otomasyonu-ve-dashboard.md](./26-grafana-otomasyonu-ve-dashboard.md) - Grafana Otomasyonu (Provisioning) ve Dashboard Yayını
 19. [27-argocd-gitops-kurulumu.md](./27-argocd-gitops-kurulumu.md) - GitOps Dönüşümü ve ArgoCD Kurulumu
 20. [28-git-onarim-ve-branch-yonetimi.md](./28-git-onarim-ve-branch-yonetimi.md) - Git Onarım ve Yanlış Branch Kurtarma Operasyonu
+21. [29-helm-mimarisi-ve-standartlar.md](./29-helm-mimarisi-ve-standartlar.md) - Helm Mimarisi ve Template Standardizasyonu
