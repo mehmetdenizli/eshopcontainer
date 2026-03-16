@@ -74,5 +74,6 @@ Her teknik adım tamamlandığında veya önemli bir değişiklik yapıldığın
 4. **`anti-handover.md`:** (Bu dosya) Projenin genel durumu, aktif envanter, IP listesi ve tamamlanan adımlar güncellenerek yeni oturumlar için hazır tutulur.
 5. **`hosts_to_paste.txt`:** Eğer IP adresleri değişmişse veya yeni sunucu eklenmişse, kullanıcının kopyalaması için bu dosya güncellenir.
 6. **Git Commit & Push:** Her teknik adım tamamlandığında, `dev` branch'ine teknik adımı açıklayacak şekilde commit ve push yapılır.
+7. **Doküman Koruma Kuralı (BİLGİ KAYBI YASAKTIR):** Dokümantasyon güncellenirken, mevcut olan ve yeni teknik adımlarla çelişmeyen hiçbir bilgi ASLA silinmez. Antigravity, yeni bilgileri mevcut içeriği ezerek (overwrite) değil, onunla harmanlayarak veya uygun başlıklar altında ekleyerek (Append/Merge) sunmalıdır. Tarihsel bağlam ve kullanıcı adımları her zaman korunmalıdır.
 
 **ANTIGRAVITY NOTU:** Yeni oturum açıldığında bu dosyayı (`anti-handover.md`) okuyarak kurallara ve kalınan yere göre devam et. Her yanıtın sonunda 'ONAY BEKLENİYOR' ibaresini ekle.
