@@ -19,6 +19,7 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 ## Faz 3: DevOps Araç Seti
 - [x] Tüm sunuculara Docker & Docker Compose kurulumu.
 - [x] Gitea (Git Server) ve Yerel Docker Registry kurulumu.
+- [x] Gitea Agresif Paket Temizleme ve Disk Yönetimi.
 - [x] Jenkins CI/CD pipeline tasarımları.
 - [x] SonarQube ve Trivy güvenlik entegrasyonları.
 - [x] Hashicorp Vault ile secret yönetimi.
