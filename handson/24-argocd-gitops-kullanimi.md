@@ -68,5 +68,15 @@ chmod +x /usr/local/bin/argocd
 argocd login argo.local --username admin --password <SİFRE> --insecure
 ```
 
+## ⚠️ Karşılaşılan Hatalar ve Çözümleri
+
+### 1. HTTP Üzerinden Login Sorunu (401 Unauthorized)
+**Hata:** `http://argo.local` adresine gidildiğinde bilgiler doğru olsa bile "Unauthorized" hatası alınması veya sürekli login sayfasına yönlendirilmesi.
+**Neden:** ArgoCD varsayılan olarak HTTPS üzerinden çalışır. Tarayıcılar, HTTP üzerinden gelen "Secure" işaretli session cookie'lerini reddettiği için oturum açılamıyordu.
+**Çözüm (Insecure Mode):**
+- ArgoCD ConfigMap (`argocd-cm`) güncellendi: `server.insecure: "true"`.
+- `argocd-server` deployment parametrelerine `--insecure` eklendi.
+- Nginx Reverse Proxy backend protokolü HTTPS'ten HTTP'ye çekildi.
+
 ---
 Bu kurulum sayesinde, Jenkins sadece kodumuzu paketleyecek ("CI"), ArgoCD ise Git üzerindeki değişiklikleri cluster'a yansıtacaktır ("CD").
