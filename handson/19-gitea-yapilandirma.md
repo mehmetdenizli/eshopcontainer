@@ -83,9 +83,54 @@ docker exec -u git gitea gitea admin user change-password \
 
 > **Önemli:** Komutu çalıştırırken `-u git` parametresi kritiktir. Gitea güvenlik gereği root kullanıcısı ile bu komutun çalıştırılmasına izin vermez.
 
+### 🔑 7. Gitea Access Token
+Proje otomasyonu ve Docker login işlemleri için oluşturulan erişim anahtarı:
+- **Token:** `430bead450a6a1206922ca666587926faf53ddb2`
+
+## 🐳 8. Uygulama İmajlarını Hazırlama ve Pushlama (Macbook Workflow)
+
+Macbook üzerinden hazırladığınız imajları Gitea Container Registry'ye göndermek için bu akışı takip edin.
+
+### 1. Registry Login:
+```bash
+docker login git.local:3000 -u gitea -p 430bead450a6a1206922ca666587926faf53ddb2
+```
+
+### 2. Mikroservis Build & Push Komutları:
+Her servis için projenin kök dizininde şu komutları sırasıyla çalıştırın:
+
+**Identity API:**
+```bash
+docker build -t git.local:3000/gitea/identity-api:latest -f src/Identity.API/Dockerfile .
+docker push git.local:3000/gitea/identity-api:latest
+```
+
+**Catalog API:**
+```bash
+docker build -t git.local:3000/gitea/catalog-api:latest -f src/Catalog.API/Dockerfile .
+docker push git.local:3000/gitea/catalog-api:latest
+```
+
+**Basket API:**
+```bash
+docker build -t git.local:3000/gitea/basket-api:latest -f src/Basket.API/Dockerfile .
+docker push git.local:3000/gitea/basket-api:latest
+```
+
+**Ordering API:**
+```bash
+docker build -t git.local:3000/gitea/ordering-api:latest -f src/Ordering.API/Dockerfile .
+docker push git.local:3000/gitea/ordering-api:latest
+```
+
+**WebApp (Frontend):**
+```bash
+docker build -t git.local:3000/gitea/webapp:latest -f src/WebApp/Dockerfile .
+docker push git.local:3000/gitea/webapp:latest
+```
+
+> [!NOTE]
+> İmaj yolları `gitea` kullanıcısı altında oluşturulacak şekilde güncellenmiştir (`git.local:3000/gitea/...`). Kubernetes manifestlerindeki imaj yolları buna göre senkronize edilmelidir.
+
 ---
 **Önemli Not:** Gitea sıfırlandığı için bu ayarları bir kez yapmanız yeterlidir. Proje ilerledikçe bu merkez bizim tüm CI/CD süreçlerimizin kalbi olacak.
-
-**Devam edebilir miyiz?**
-
-ONAY BEKLENİYOR
