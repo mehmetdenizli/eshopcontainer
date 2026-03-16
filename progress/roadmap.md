@@ -28,3 +28,8 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 - [x] Loki ile merkezi loglama.
 - [ ] eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
 - [ ] Uçtan uca testlerin yapılması.
+
+## Faz 5: GitOps ve Sürekli Dağıtım (Yeni)
+- [x] ArgoCD kurulumu ve K3s entegrasyonu.
+- [ ] Helm Chart mimarisinin kurulması.
+- [ ] GitOps (ArgoCD) ile otomatik senkronizasyon.

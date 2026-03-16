@@ -41,6 +41,9 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 12. **Secret Management:** vault-srv (10GB Disk) üzerinde Hashicorp Vault aktif edildi.
 13. **Monitoring (PLGA):** Tüm 7 sunucuya basitleştirilmiş Alloy ajanları dağıtıldı. cAdvisor (konteyner metrikleri) ve K8s pod logları (job="kubernetes-pods") toplanıyor. Grafana dashboard'ları temizlendi ("Clean Slate").
 14. **Domain Persistence:** Tüm sunucularda `/etc/hosts` dosyası senkronize edildi ve `cloud-init` kilidi kaldırılarak kalıcı hale getirildi.
+15. **Checkpoint:** Sistem bu haliyle `monitoring-stable-v1` etiketiyle (git tag) damgalandı ve repoya puslandı.
+16. **GitOps Dönüşümü:** ArgoCD K3s üzerine kuruldu, Jenkins sunucusu üzerinden Proxy (`argo.local`) ve CLI erişimi yapılandırıldı. Insecure mode ile SSL sorunları çözüldü.
+17. **Checkpoint:** `argocd-ready-v1` etiketiyle sistem bu noktada sabitlendi.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **K8s App Deployment:** eShopOnContainers servislerinin K8s üzerine deploy edilmesi.
@@ -55,6 +58,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 | **SonarQube** | [http://192.168.2.91:9000](http://192.168.2.91:9000) | 192.168.2.91 | ✅ Aktif |
 | **Vault** | [http://192.168.2.92:8200](http://192.168.2.92:8200) | 192.168.2.92 | ✅ Kilitli |
 | **Grafana** | [http://192.168.2.87:3003](http://192.168.2.87:3003) | 192.168.2.87 | ✅ Aktif |
+| **ArgoCD** | [http://argo.local](http://argo.local) | 192.168.2.89 | ✅ Aktif |
 
 *Not: Tüm servis kullanıcı adı ve şifreleri ilgili `/handson/` dökümanlarında yer almaktadır.*
 

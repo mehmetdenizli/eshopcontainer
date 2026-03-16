@@ -20,3 +20,4 @@
           {{ hostvars[host]['ansible_host'] }} {{ host }}
           {% endfor %}
           192.168.2.85 k3s-master-api  # K8s API için alias
+          192.168.2.89 argo.local      # GitOps UI
