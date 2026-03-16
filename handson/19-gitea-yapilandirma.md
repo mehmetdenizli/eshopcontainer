@@ -101,7 +101,26 @@ Macbook üzerinden hazırladığınız imajları Gitea Container Registry'ye gö
 docker login git.local:3000 -u gitea -p 430bead450a6a1206922ca666587926faf53ddb2
 ```
 
-### 2. Mikroservis Build & Push Komutları:
+### ⚡ Hızlı Yöntem: Mevcut İmajları Retag Yaparak Pushlama
+Eğer imajlar Macbook'unuzda zaten mevcutsa (`docker images` ile görünüyorsa), build etmeden şu komutlarla gönderebilirsiniz:
+
+```bash
+# Retag
+docker tag eshopcontainer-identity-api:latest git.local:3000/gitea/identity-api:latest
+docker tag eshopcontainer-catalog-api:latest git.local:3000/gitea/catalog-api:latest
+docker tag eshopcontainer-basket-api:latest git.local:3000/gitea/basket-api:latest
+docker tag eshopcontainer-ordering-api:latest git.local:3000/gitea/ordering-api:latest
+docker tag eshopcontainer-webapp:latest git.local:3000/gitea/webapp:latest
+
+# Push
+docker push git.local:3000/gitea/identity-api:latest
+docker push git.local:3000/gitea/catalog-api:latest
+docker push git.local:3000/gitea/basket-api:latest
+docker push git.local:3000/gitea/ordering-api:latest
+docker push git.local:3000/gitea/webapp:latest
+```
+
+### 2. Mikroservis Build & Push Komutları (Sıfırdan Build İçin):
 Her servis için projenin kök dizininde şu komutları sırasıyla çalıştırın:
 
 **Identity API:**
