@@ -37,8 +37,8 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 - [ ] GitOps (ArgoCD) ile otomatik senkronizasyon.
 
 ## Faz 6: Secret Management & Security (Yeni)
-- [ ] Hashicorp Vault & K8s Secret Entegrasyonu.
-- [ ] Vault Agent Injector ile Pod bazlı secret yönetimi.
+- [x] Hashicorp Vault & K8s Secret Entegrasyonu.
+- [x] Vault Agent Injector ile Pod bazlı secret yönetimi.
 - [ ] SonarQube Kod Kalite Tarama Entegrasyonu.
 - [ ] Trivy İmaj Güvenlik Tarama Entegrasyonu.
 

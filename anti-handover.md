@@ -50,6 +50,7 @@ Bu dosya, bir sonraki Antigravity oturumu başladığında projeye kaldığı ye
 21. **OIDC & Proxy Fix:** WebApp ve IdentityServer arasındaki "Correlation Failed" hatası çözüldü. HTTP (non-TLS) ortamında `ResponseMode=Query`, `SameSite=Lax` ve `Logout` (OnRedirectToIdentityProviderForSignOut) yönlendirme düzeltmeleri uygulandı. Login ve Logout akışları tarayıcı üzerinden doğrulandı.
 22. **Gitea Agresif Temizlik:** Container Registry disk alanını korumak için 5 dakikalık (`@every 5m`) cron ve "en son 1 versiyonu tut" (`KEEP_LAST_VERSIONS=1`) kuralı hem `app.ini` hem de Web UI üzerinden aktif edildi.
 23. **Checkpoint:** `k8s-oidc-ready-v1` etiketiyle sistem bu noktada sabitlendi. Gitea cleanup ve K8s OIDC login/logout akışları doğrulanmış durumda.
+24. **Vault Entegrasyonu:** Hashicorp Vault unseal edildi, Kubernetes (K3s) auth metodu aktif edildi ve Vault Agent Injector cluster'a kuruldu. Podların Vault'tan şifre çekebilmesi için altyapı hazır.
 
 ## 🚀 Sıradaki Adım (Next Phase)
 - **Validation:** Kimlik doğrulama akışının tarayıcı üzerinden uçtan uca doğrulanması ve kullanıcı girişinin tamamlanması.
