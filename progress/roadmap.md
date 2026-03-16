@@ -33,5 +33,6 @@ Bu belge, altyapı kurulumunun aşamalarını ve hedeflerini içerir.
 
 ## Faz 5: GitOps ve Sürekli Dağıtım (Yeni)
 - [x] ArgoCD kurulumu ve K3s entegrasyonu.
-- [ ] Helm Chart mimarisinin kurulması.
-- [ ] GitOps (ArgoCD) ile otomatik senkronizasyon.
+- [ ] Faz 1: Hashicorp Vault & K8s Secret Entegrasyonu.
+- [ ] Faz 2: Jenkins Shared Library & Security Scan (Sonar/Trivy).
+- [ ] Faz 3: Helm Chart & ArgoCD GitOps Otomasyonu.

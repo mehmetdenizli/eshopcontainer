@@ -52,3 +52,4 @@ Eksiksiz bir CI/CD hattı, merkezi izleme (monitoring), güvenlik taramaları ve
 25. [33-gateway-api-gecisi.md](./33-gateway-api-gecisi.md) - Modern Kubernetes Gateway API Geçişi
 26. [34-oidc-korelasyon-ve-proxy-cozumu.md](./34-oidc-korelasyon-ve-proxy-cozumu.md) - OIDC Correlation Failed ve Proxy Çözümü
 27. [35-gitea-agresif-paket-temizleme.md](./35-gitea-agresif-paket-temizleme.md) - Gitea Agresif Paket Temizleme ve Disk Yönetimi
+28. [36-devsecops-yol-haritasi.md](./36-devsecops-yol-haritasi.md) - DevSecOps Yol Haritası (CI/CD, Güvenlik ve Secret Yönetimi)
