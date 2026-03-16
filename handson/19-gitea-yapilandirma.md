@@ -92,6 +92,11 @@ Proje otomasyonu ve Docker login işlemleri için oluşturulan erişim anahtarı
 Macbook üzerinden hazırladığınız imajları Gitea Container Registry'ye göndermek için bu akışı takip edin.
 
 ### 1. Registry Login:
+
+> [!IMPORTANT]
+> **HTTP/HTTPS Hatası Alanlar İçin (Macbook Fix):**
+> Docker varsayılan olarak HTTPS bekler. `http: server gave HTTP response to HTTPS client` hatası alırsanız Macbook Docker Desktop -> Settings -> Docker Engine kısmına `"insecure-registries": ["git.local:3000"]` satırını ekleyip restart edin.
+
 ```bash
 docker login git.local:3000 -u gitea -p 430bead450a6a1206922ca666587926faf53ddb2
 ```
