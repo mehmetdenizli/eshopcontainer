@@ -1,9 +1,14 @@
 # Hands-on 27: Kubernetes İmaj Çekme ve Registry Hazırlığı
 
-Bu rehber, Kubernetes'in (K3s) yerel registry'den (`git.local:3000`) imaj çekebilmesi için sunucu tarafında yapılan teknik yapılandırmaları detaylandırır.
+Bu rehber, Kubernetes'in yerel registry'nizden (`git.local`) nasıl imaj çekeceğini ve gereken altyapı servislerini nasıl hazırlayacağınızı açıklar.
 
-## 🛠️ 1. Gitea Container Registry Hazırlığı (Sunucu Tarafı)
-K3s node'larının Gitea'ya HTTP (insecure) üzerinden erişebilmesi için tüm node'larda (Master ve Worker) şu dosya oluşturulmalıdır:
+## 🛠️ 1. Gitea Container Registry'yi Hazırlama
+Gitea üzerinde bir "Container Registry" kullanabilmek için:
+- Kullanıcı profilinden bir **App Token** oluşturulmalıdır.
+- Bu token ile `docker login git.local:3000` yapılabilmelidir.
+
+### 🔧 Sunucu Tarafı Yapılandırması (Insecure Registry)
+K3s node'larının Gitea'ya HTTP üzerinden erişebilmesi için tüm node'larda (Master ve Worker) şu dosya oluşturulmuştur:
 
 **Dosya:** `/etc/rancher/k3s/registries.yaml`
 ```yaml
@@ -13,18 +18,10 @@ mirrors:
       - "http://git.local:3000"
 ```
 
-### Yapılandırmanın Uygulanması:
-Master node üzerinde:
-```bash
-sudo systemctl restart k3s
-```
-Worker node üzerinde:
-```bash
-sudo systemctl restart k3s-agent
-```
+Master üzerinde `k3s`, worker üzerinde `k3s-agent` servisi restart edilmelidir.
 
-## 🔑 2. Kubernetes Pull Secret (`regcred`) Oluşturma
-Kubernetes'in özel (private) registry'den imaj çekebilmesi için `default` namespace altında bir yetkilendirme secret'ı oluşturduk.
+## 🔑 2. Kubernetes pullSecret Oluşturma
+Kubernetes'in `git.local:3000`'e login olabilmesi için oluşturduğumuz secret:
 
 ```bash
 kubectl create secret docker-registry regcred \
@@ -34,22 +31,35 @@ kubectl create secret docker-registry regcred \
   --docker-email=foriinji@gmail.com
 ```
 
-## 🏗️ 3. Manifestlerde Kullanımı
-Tüm Deployment manifestlerinde `spec.template.spec` altına şu bölüm eklenmelidir:
+## 🏗️ 3. Geçici Test Deployment (Probing)
+Helm'den önce her şeyin çalıştığını anlamak için basit bir test dosyası (`test-deploy.yaml`):
 
 ```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-test
 spec:
-  imagePullSecrets:
-    - name: regcred
-  containers:
-    - name: identity-api
-      image: git.local:3000/gitea/identity-api:latest
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+      - name: nginx
+        image: git.local:3000/gitea/identity-api:latest
 ```
 
-## ⚠️ Kritik Bilgiler
+## ⚠️ Dikkat Edilmesi Gerekenler
+- **DNS:** Tüm K8s node'ları `git.local` ismini çözebiliyor olmalıdır.
 - **Insecure Registry:** `/etc/rancher/k3s/registries.yaml` dosyası olmazsa K3s imaj çekmeye çalışırken HTTPS hatası verir.
-- **Port:** Registry portunun `:3000` olduğu hem secret içinde hem de `registries.yaml` içinde belirtilmelidir.
-- **Namespace:** Secret hangi namespace'de oluşturulduysa, Deployment da o namespace'de olmalıdır.
+- **Namespace:** Secret hangi namespace'de ise deployment da orada olmalıdır.
 
 ---
-Bu adımlar sayesinde K3s kümemiz, Gitea Container Registry ile tam uyumlu hale getirilmiştir.
+Bu adımlar tamamlandığında, Helm ile mikroservis deploy etmek sadece bir "Values" dosyasını değiştirmek kadar kolay olacak.
