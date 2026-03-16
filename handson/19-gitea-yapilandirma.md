@@ -58,6 +58,13 @@ docker exec -u 1000 gitea gitea admin user create \
   --admin
 ```
 
+## 🌐 5. SSH & Git Erişimi
+Gitea SSH portu `2222` olarak yapılandırılmıştır. Git komutlarını bu port üzerinden kullanmalısınız:
+
+```bash
+git clone ssh://git@192.168.2.90:2222/[kullanici]/[repo].git
+```
+
 ## ⚠️ 6. Karşılaşılan Hatalar ve Şifre Sıfırlama
 
 Eğer admin şifresini unutursanız veya kullanıcı adınızı kontrol etmeniz gerekirse, Ansible kontrol makinesinden (veya doğrudan `git.local` üzerinden) şu komutları kullanabilirsiniz:
