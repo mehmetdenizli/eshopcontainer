@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhooks-api
+  namespace: eshop
+  labels:
+    app: webhooks-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhooks-api
+  template:
+    metadata:
+      labels:
+        app: webhooks-api
+    spec:
+      containers:
+        - name: webhooks-api
+          image: foriinji/webhooks-api:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__webhooksdb
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: WebhooksDbConnection
+            - name: ConnectionStrings__eventbus
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: EventBusConnection
+            - name: Identity__Url
+              value: "http://identity-api:8080"
+          envFrom:
+            - configMapRef:
+                name: eshop-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhooks-api
+  namespace: eshop
+spec:
+  selector:
+    app: webhooks-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: webhooks-api
+  namespace: eshop
+spec:
+  to:
+    kind: Service
+    name: webhooks-api
+  port:
+    targetPort: 8080

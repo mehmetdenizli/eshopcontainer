@@ -28,7 +28,8 @@ This `openshift` directory serves as the main workspace for all activities relat
 | 04 | Infrastructure Setup and Deployment | ✅ Completed | [Link](./progress/04-infra-setup.md) | [Link](./hands-on/04-infra-setup.md) |
 | 05 | Identity and Core API Deployment | ✅ Completed | [Link](./progress/05-identity-deployment.md) | [Link](./hands-on/05-identity-deployment.md) |
 | 06 | Catalog and Business APIs Deployment | ✅ Completed | [Link](./progress/06-business-apis-deployment.md) | [Link](./hands-on/06-business-apis-deployment.md) |
-| 07 | Frontend (WebApp) and Final Integration | 🕒 Next Step | - | - |
+| 07 | Frontend (WebApp) and Final Integration | ✅ Completed | [Link](./progress/07-frontend-integration.md) | [Link](./hands-on/07-frontend-integration.md) |
+| 08 | Project Closure and Maintenance | 🕒 Next Step | - | - |
 
 ---
 **Goal:** To build a well-documented, reproducible, and professional-grade workflow for OpenShift deployment.
