@@ -15,6 +15,8 @@ This `openshift` directory serves as the main workspace for all activities relat
 1. **Step-by-Step Execution:** The project proceeds strictly one step at a time.
 2. **Mandatory Documentation:** A new step will not begin until the current step is fully executed, documented in `hands-on/`, and logged in `progress/`.
 3. **Traceability:** File naming reflects the specific step names for easy navigation.
+4. **Approval for Cluster Actions:** NO `oc` or cluster-modifying commands will be executed without explicit user approval.
+5. **On-Demand Remote Push:** Changes will be pushed to the remote repository ONLY at the end of a step and ONLY when explicitly requested by the user.
 
 ## Roadmap & Progress Summary
 
@@ -24,7 +26,8 @@ This `openshift` directory serves as the main workspace for all activities relat
 | 02 | Login and Cluster Verification | ✅ Completed | [Link](./progress/02-login-verification.md) | [Link](./hands-on/02-login-verification.md) |
 | 03 | Image Registry and Build Strategy | ✅ Completed | [Link](./progress/03-image-registry-build.md) | [Link](./hands-on/03-image-registry-build.md) |
 | 04 | Infrastructure Setup and Deployment | ✅ Completed | [Link](./progress/04-infra-setup.md) | [Link](./hands-on/04-infra-setup.md) |
-| 05 | Identity and Core API Deployment | 🕒 Next Step | - | - |
+| 05 | Identity and Core API Deployment | ✅ Completed | [Link](./progress/05-identity-deployment.md) | [Link](./hands-on/05-identity-deployment.md) |
+| 06 | Catalog and Business APIs Deployment | 🕒 Next Step | - | - |
 
 ---
 **Goal:** To build a well-documented, reproducible, and professional-grade workflow for OpenShift deployment.
