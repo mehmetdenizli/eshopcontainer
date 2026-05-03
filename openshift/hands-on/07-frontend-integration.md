@@ -10,20 +10,20 @@ We deploy `OrderProcessor` and `PaymentProcessor`. These services don't need a p
 - **Manifests:** `openshift/manifests/apps/order-processor/` & `payment-processor/`
 - **Dependencies:** RabbitMQ, Ordering DB.
 
-### 3. Webhooks Ecosystem Deployment
+### 2. Webhooks Ecosystem Deployment
 We also deploy the Webhooks infrastructure to allow external systems to subscribe to eShop events.
 - **Webhooks.API:** Manages subscriptions and dispatches events.
 - **WebhookClient:** A dedicated UI to visualize incoming webhooks.
 - **Manifests:** `openshift/manifests/apps/webhooks-api/` & `webhooksclient/`
 - **Dependencies:** Postgres (webhooksdb), RabbitMQ, Identity.API.
 
-### 2. Frontend (WebApp) Deployment
-The WebApp requires careful configuration of URLs for the OIDC login flow to work:
-- **IdentityUrl:** Internal service URL (`http://identity-api:8080`).
-- **IdentityUrlExternal:** Public Route URL of Identity API (used by the browser).
-- **CallBackUrl:** Public Route URL of the WebApp itself (where Identity API redirects after login).
+### 3. Centralized Configuration (Best Practice)
+Instead of hardcoding environment variables in each deployment, we moved all service URLs and secrets to a single source of truth:
+- **ConfigMap:** `eshop-config` contains all internal and external URLs.
+- **Secrets:** `eshop-secrets` contains connection strings and RabbitMQ credentials.
+- **OIDC Fixes:** Added `WebAppClient` and `IdentityUrl` (flat) to the ConfigMap to ensure IdentityServer redirects and WebApp service starts correctly.
 
-### 3. Final Integration Test
+### 4. Final Integration Test
 We will verify:
 - Browser redirection to Identity API for login.
 - Successful authentication and return to WebApp.
