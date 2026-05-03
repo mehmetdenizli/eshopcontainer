@@ -17,8 +17,12 @@ We prepared three core manifests in `openshift/manifests/infra/`:
 - **02-redis.yaml:** Deploys Redis 8.2 with a 2Gi PVC.
 - **03-rabbitmq.yaml:** Deploys RabbitMQ 4.2-management with a 2Gi PVC.
 
-### 3. Storage Strategy
-In OpenShift (CRC), we use `PersistentVolumeClaims` (PVC). The default storage class (`crc-standard`) automatically provisions the underlying `PersistentVolumes` (PV), simplifying the setup while ensuring data survives pod restarts.
+### 3. Storage Strategy & Dynamic Provisioning
+In OpenShift (CRC), we utilize **Dynamic Storage Provisioning**. This means we do not need to manually create `PersistentVolume` (PV) objects for every service. 
+
+- **How it works:** We define a `PersistentVolumeClaim` (PVC), and the cluster's default **StorageClass** (`crc-standard`) automatically provisions a matching PV and binds it to our claim.
+- **Verification:** You can see the automatically created PVs by running `oc get pv`.
+- **Benefit:** This simplifies infrastructure management and ensures portability across different cloud environments that support dynamic storage.
 
 ## Applying Manifests
 To apply these manifests, we use the following command:
