@@ -23,7 +23,8 @@ This `openshift` directory serves as the main workspace for all activities relat
 | 01 | Environment Preparation (CRC) | ✅ Completed | [Link](./progress/01-env-prep.md) | [Link](./hands-on/01-env-prep.md) |
 | 02 | Login and Cluster Verification | ✅ Completed | [Link](./progress/02-login-verification.md) | [Link](./hands-on/02-login-verification.md) |
 | 03 | Image Registry and Build Strategy | ✅ Completed | [Link](./progress/03-image-registry-build.md) | [Link](./hands-on/03-image-registry-build.md) |
-| 04 | Deployment Manifests (YAML) | 🕒 Next Step | - | - |
+| 04 | Infrastructure Setup and Deployment | ✅ Completed | [Link](./progress/04-infra-setup.md) | [Link](./hands-on/04-infra-setup.md) |
+| 05 | Identity and Core API Deployment | 🕒 Next Step | - | - |
 
 ---
 **Goal:** To build a well-documented, reproducible, and professional-grade workflow for OpenShift deployment.
