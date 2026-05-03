@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api
+  namespace: eshop
+  labels:
+    app: basket-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basket-api
+  template:
+    metadata:
+      labels:
+        app: basket-api
+    spec:
+      containers:
+        - name: basket-api
+          image: foriinji/basket.api:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__redis
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: RedisConnection
+            - name: ConnectionStrings__eventbus
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: EventBusConnection
+            - name: Identity__Url
+              value: "http://identity-api:8080"
+          envFrom:
+            - configMapRef:
+                name: eshop-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: basket-api
+  namespace: eshop
+spec:
+  selector:
+    app: basket-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: basket-api
+  namespace: eshop
+spec:
+  to:
+    kind: Service
+    name: basket-api
+  port:
+    targetPort: 8080

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api
+  namespace: eshop
+  labels:
+    app: catalog-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-api
+  template:
+    metadata:
+      labels:
+        app: catalog-api
+    spec:
+      containers:
+        - name: catalog-api
+          image: foriinji/catalog.api:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__catalogdb
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: CatalogDbConnection
+            - name: ConnectionStrings__eventbus
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: EventBusConnection
+          envFrom:
+            - configMapRef:
+                name: eshop-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-api
+  namespace: eshop
+spec:
+  selector:
+    app: catalog-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: catalog-api
+  namespace: eshop
+spec:
+  to:
+    kind: Service
+    name: catalog-api
+  port:
+    targetPort: 8080

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-api
+  namespace: eshop
+  labels:
+    app: ordering-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-api
+  template:
+    metadata:
+      labels:
+        app: ordering-api
+    spec:
+      containers:
+        - name: ordering-api
+          image: foriinji/ordering.api:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__orderingdb
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: OrderingDbConnection
+            - name: ConnectionStrings__eventbus
+              valueFrom:
+                secretKeyRef:
+                  name: eshop-secrets
+                  key: EventBusConnection
+            - name: Identity__Url
+              value: "http://identity-api:8080"
+          envFrom:
+            - configMapRef:
+                name: eshop-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-api
+  namespace: eshop
+spec:
+  selector:
+    app: ordering-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ordering-api
+  namespace: eshop
+spec:
+  to:
+    kind: Service
+    name: ordering-api
+  port:
+    targetPort: 8080
